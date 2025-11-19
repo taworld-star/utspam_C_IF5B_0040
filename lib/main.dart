@@ -1,12 +1,13 @@
+import 'package:car_rental_app/screen/register_page.dart';
 import 'package:flutter/material.dart';
 import 'screen/login_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const RentalCar());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class RentalCar extends StatelessWidget {
+  const RentalCar({super.key});
 
   // This widget is the root of your application.
   @override
@@ -14,10 +15,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Car Rental App',
       theme: ThemeData(
-        
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xff605EA1)),
       ),
-      home: const LoginPage(),
+      home: const RegisterPage(),
       debugShowCheckedModeBanner: false,
     );
   }

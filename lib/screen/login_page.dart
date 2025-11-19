@@ -41,10 +41,10 @@ class _LoginPageState extends State<LoginPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Logo atau Title
-                Image.asset('assets/images/logo.png', height: 200),
-                const SizedBox(height: 16),
+                 Image.asset('assets/images/logoo.png', height: 160),
+                
                 const Text(
-                  'Aplikasi Sewa Mobil',
+                  'Rental Car Application',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 28,
@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const Text(
-                  'Selamat Datang di Aplikasi Sewa Mobil\nSilakan login untuk melanjutkan ke aplikasi!',
+                  'Welcome to Rental Car Application\n Please login to continue!',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -68,16 +68,16 @@ class _LoginPageState extends State<LoginPage> {
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
                     labelText: 'Username',
-                    hintText: 'Masukkan username Anda',
+                    hintText: 'Enter your username',
                     prefixIcon: Icon(Icons.account_circle),
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Username tidak boleh kosong';
+                      return 'Username cannot be empty';
                     }
                     if (!value.contains('@')) {
-                      return 'Username tidak valid';
+                      return 'Username not valid';
                     }
                     return null;
                   },
@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    hintText: 'Masukkan password Anda',
+                    hintText: 'Enter your password',
                     prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -108,10 +108,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Password tidak boleh kosong';
+                      return 'Password cannot be empty';
                     }
                     if (value.length < 6) {
-                      return 'Password minimal 6 karakter';
+                      return 'Password minimum 6 digits';
                     }
                     return null;
                   },
@@ -123,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: _login,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: Color(0xff605EA1),
                     foregroundColor: Colors.white,
                   ),
                   child: const Text(
@@ -137,12 +137,12 @@ class _LoginPageState extends State<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Belum punya akun? '),
+                    const Text('Cannot have account?'),
                     TextButton(
                       onPressed: () {
                         // TODO: Navigate to register screen
                       },
-                      child: const Text('Daftar'),
+                      child: const Text('Register'),
                     ),
                   ],
                 ),

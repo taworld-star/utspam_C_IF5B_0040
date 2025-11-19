@@ -56,16 +56,15 @@ class _RegisterPageState extends State<RegisterPage> {
         title: Text('Registrasi Akun'),
         centerTitle: true,
       ),
-      body: Center(
+      body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-
+            children: [
               Text(
-                'Selamat datang di halaman pendaftaran',
+                'Welcome to Registration Page',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 24,
@@ -75,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 20),
               Text(
-                'Silahkan mengisi form pendaftaran di bawah ini',
+                'Please fill the form to continue',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
@@ -84,7 +83,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 20),
               
-
+        
               Form(
                 key: _formKey,
                 child: Column(
@@ -93,16 +92,16 @@ class _RegisterPageState extends State<RegisterPage> {
                     TextFormField(
                       controller: _nameController,
                       decoration: InputDecoration(
-                        labelText: 'Nama',
-                        hintText: 'Masukkan nama',
+                        labelText: 'Name',
+                        hintText: 'Enter your name',
                         prefixIcon: Icon(Icons.person_outline),
-                        border: UnderlineInputBorder(
+                        border: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.grey,
                             width: 1.0,
                           ),
                         ),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Theme.of(context).primaryColor,
                             width: 2.0,
@@ -111,27 +110,27 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Nama tidak boleh kosong';
+                          return 'Name cannot Empty';
                         }
                         return null;
                       },
                     ),
                     const SizedBox(height: 10),
-
+        
                     // Nik Field
                     TextFormField(
                       controller: _nikController,
                       decoration: InputDecoration(
-                        labelText: 'Masukkan NIK',
-                        hintText: 'Contoh: 1234567890123456',
+                        labelText: 'Enter your NIK',
+                        hintText: 'Example: 1234567890123456',
                         prefixIcon: Icon(Icons.location_city_outlined),
-                        border: UnderlineInputBorder(
+                        border: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.grey,
                             width: 1.0,
                           ),
                         ),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Theme.of(context).primaryColor,
                             width: 2.0,
@@ -140,13 +139,16 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'NIK tidak boleh kosong';
+                          return 'NIK cannot be empty';
+                        }
+                        if(value.length < 16 || value.length > 16){
+                          return 'NIK must be 16 digits';
                         }
                         return null;
                       },
                     ),
                     const SizedBox(height: 20),
-
+        
                     // Phone Number Field
                     TextFormField(
                       controller: _phoneController,
@@ -155,13 +157,13 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelText: 'Phone Number',
                         hintText: 'Example: 08123456789',
                         prefixIcon: Icon(Icons.phone_android_outlined),
-                        border: UnderlineInputBorder(
+                        border: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.grey,
                             width: 1.0,
                           ),
                         ),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Theme.of(context).primaryColor,
                             width: 2.0,
@@ -180,21 +182,21 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                     ),
                     const SizedBox(height: 20),
-
+        
                     // Address Field
                     TextFormField(
-                      controller: _nikController,
+                      controller: _addressController,
                       decoration: InputDecoration(
-                        labelText: 'Masukkan Alamat',
-                        hintText: 'Misal: Jakarta, Indonesia',
+                        labelText: 'Enter your Address',
+                        hintText: 'Example: Jakarta, Indonesia',
                         prefixIcon: Icon(Icons.location_city_outlined),
-                        border: UnderlineInputBorder(
+                        border: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.grey,
                             width: 1.0,
                           ),
                         ),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Theme.of(context).primaryColor,
                             width: 2.0,
@@ -203,28 +205,28 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'NIK tidak boleh kosong';
+                          return 'Address cannot be empty';
                         }
                         return null;
                       },
                     ),
                     const SizedBox(height: 10),
-
+        
                     // Email Field
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         labelText: 'Email',
-                        hintText: 'Masukkan Email',
+                        hintText: 'Example: abcd@gmail.com',
                         prefixIcon: Icon(Icons.email_outlined),
-                        border: UnderlineInputBorder(
+                        border: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.grey,
                             width: 1.0,
                           ),
                         ),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Theme.of(context).primaryColor,
                             width: 2.0,
@@ -233,28 +235,28 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Email tidak boleh kosong';
+                          return 'Email cannot be empty';
                         }
                         // Basic email format validation
                         if (!value.contains('@') || !value.contains('.')) {
-                          return 'Format email tidak valid';
+                          return 'Invalid email format';
                         }
                         // Check for the specific domain ending
                         if (!_acceptedEmailDomains.any((domain) => value.endsWith(domain))) {
-                          return 'Hanya domain ${_acceptedEmailDomains.join(', ')} yang bisa diterima';
+                          return 'Only domains ${_acceptedEmailDomains.join(', ')} are accepted';
                         }
                         return null;
                       },
                     ),
                     const SizedBox(height: 10),
-
+        
                     // Password Field
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
-                        labelText: 'Kata Sandi',
-                        hintText: 'Masukkan kata sandi',
+                        labelText: 'Password',
+                        hintText: 'Enter your password',
                         prefixIcon: Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -266,13 +268,13 @@ class _RegisterPageState extends State<RegisterPage> {
                             });
                           },
                         ),
-                        border: UnderlineInputBorder(
+                        border: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.grey,
                             width: 1.0,
                           ),
                         ),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Theme.of(context).primaryColor,
                             width: 2.0,
@@ -290,12 +292,12 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                     ),
                     const SizedBox(height: 10),
-
+        
                     // Register Button
-                    ElevatedButton(
+                    FilledButton(
                       onPressed: _register,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF9C824A),
+                      style: FilledButton.styleFrom(
+                        // backgroundColor: const Color(0xFF9C824A),
                         padding: const EdgeInsets.symmetric(horizontal: 120.0),
                         minimumSize: const Size.fromHeight(48), // Make button at least 48 high
                         shape: RoundedRectangleBorder(
@@ -303,25 +305,26 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       child: const Text(
-                        'Daftar',
+                        'Register',
                         style: TextStyle(fontSize: 18, 
                         fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                        // color: Colors.white
+                        ),
                       ),
                     ),
                     const SizedBox(height: 30),
-
+        
                     // Login Link
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text('Sudah memiliki akun? '),
+                        const Text('Have Account? '),
                         TextButton( 
                           onPressed: () {
                             
                           },
                           child: Text(
-                            'Login disini!',
+                            'Login Here!',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -337,3 +340,4 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 }
+
