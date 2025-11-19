@@ -34,6 +34,8 @@ class _LoginPageState extends State<LoginPage> {
         email: _usernameController.text,
         phone: '081234567890',
         password: _passwordController.text,
+        username: 'johndoe',
+        
       );
 
       Navigator.pushReplacementNamed(
