@@ -237,11 +237,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         if (value == null || value.isEmpty) {
                           return 'Email cannot be empty';
                         }
-                        // Basic email format validation
+                        
                         if (!value.contains('@') || !value.contains('.')) {
                           return 'Invalid email format';
                         }
-                        // Check for the specific domain ending
+                      
                         if (!_acceptedEmailDomains.any((domain) => value.endsWith(domain))) {
                           return 'Only domains ${_acceptedEmailDomains.join(', ')} are accepted';
                         }

@@ -1,3 +1,6 @@
+import 'package:car_rental_app/data/model/user_model.dart';
+import 'package:car_rental_app/screen/home_page.dart';
+import 'package:car_rental_app/screen/register_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,13 +23,32 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  
+
   void _login() {
     if (_formKey.currentState!.validate()) {
+
+      final loggedInUser = UserModel(
+        id: 1,
+        name: 'John Doe',
+        email: _usernameController.text,
+        phone: '081234567890',
+        password: _passwordController.text,
+      );
+
+      Navigator.pushReplacementNamed(
+        context, 
+        MaterialPageRoute(
+          builder: (context) => HomePage(user: loggedInUser,)
+          ) as String,
+        );
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login berhasil')),
       );
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +162,9 @@ class _LoginPageState extends State<LoginPage> {
                     const Text('Cannot have account?'),
                     TextButton(
                       onPressed: () {
-                        // TODO: Navigate to register screen
+                        Navigator.push(context, 
+                        MaterialPageRoute(
+                          builder: (context) => const RegisterPage()));
                       },
                       child: const Text('Register'),
                     ),

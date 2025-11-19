@@ -1,6 +1,8 @@
+import 'package:car_rental_app/screen/home_page.dart';
 import 'package:car_rental_app/screen/register_page.dart';
 import 'package:flutter/material.dart';
 import 'screen/login_page.dart';
+
 
 void main() {
   runApp(const RentalCar());
@@ -17,7 +19,7 @@ class RentalCar extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xff605EA1)),
       ),
-      home: const RegisterPage(),
+      home: const LoginPage(),
       debugShowCheckedModeBanner: false,
     );
   }
