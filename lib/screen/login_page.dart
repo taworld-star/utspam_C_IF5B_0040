@@ -2,6 +2,7 @@ import 'package:car_rental_app/data/model/user_model.dart';
 import 'package:car_rental_app/screen/home_page.dart';
 import 'package:car_rental_app/screen/register_page.dart';
 import 'package:flutter/material.dart';
+import 'package:car_rental_app/data/db/db_helper.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -23,7 +25,61 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  
+  Future<void> _login() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
+
+      try {
+        //Get user from database
+
+        final user = await DatabaseHelper.instance.getUserByUsername(
+          _usernameController.text,
+        );
+        
+        if (user == null) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Username not found'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+          setState(() => _isLoading = false);
+          return;
+        }
+
+        //Cek Password
+        if (user.password != _passwordController.text) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Wrong Password'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+          setState(() => _isLoading = false);
+          return;
+        }
+        //Login Succesfully
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login successfull'),
+            ),
+          );
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(user: user)
+            )
+          );
+        }
+      }
+    }
+  }
 
   void _login() {
     if (_formKey.currentState!.validate()) {

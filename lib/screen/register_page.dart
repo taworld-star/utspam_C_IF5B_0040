@@ -1,3 +1,4 @@
+import 'package:car_rental_app/data/db/db_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:car_rental_app/screen/login_page.dart';
 
@@ -22,17 +23,71 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final List<String> _acceptedEmailDomains = ['@gmail.com', '@uisi.ac.id', '@example.com'];
 
-  void _register() {
-    if (_formKey.currentState!.validate()) {
-      print('Name: ${_nameController.text}');
-      print('Nik: ${_nikController.text}');
-      print('Email: ${_emailController.text}');
-      print('Phone Number: ${_phoneController.text}');
-      print('Address: ${_addressController.text}');
-      print('Username: ${_usernameController.text}');
-      print('Password: ${_passwordController.text}');
+  Future<void> _register() async {
+    if(_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
 
-      Navigator.pushReplacementNamed(context, '/'); 
+      try{
+        //Cek if username was already exist
+        final isExists = await DatabaseHelper.instance.isUsernameExists(
+          _usernameController.text,
+        );
+
+      if (isExists) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const.SnackBar(
+              content: Text('Username already exist'),
+              backgroundColor: Colors.red,
+              
+            )
+          );
+        }
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      //For new user
+      final newUser = UserModel(
+        name: _nameController.text,
+        nik: _nikController.text,
+        email: _emailController.text,
+        phone: _phoneController.text,
+        address: _addressController.text,
+        password: _passwordController.text,
+      );
+
+      //Save to Database
+      await DatabaseHelper.instance.createUser(newUser);
+
+      if(mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Registration succesfull'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        //Back to Login
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
+      }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Registration failed: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
+      }
     }
   }
 
@@ -94,7 +149,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     TextFormField(
                       controller: _nameController,
                       decoration: InputDecoration(
-                        labelText: 'Name',
+                        labelText: 'FullName',
                         hintText: 'Enter your name',
                         prefixIcon: Icon(Icons.person_outline),
                         border: OutlineInputBorder(
