@@ -1,6 +1,3 @@
-import 'package:car_rental_app/data/model/user_model.dart';
-import 'package:car_rental_app/screen/home_page.dart';
-import 'package:car_rental_app/screen/register_page.dart';
 import 'package:flutter/material.dart';
 import 'screen/login_page.dart';
 

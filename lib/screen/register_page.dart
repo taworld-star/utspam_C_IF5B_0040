@@ -2,7 +2,6 @@ import 'package:car_rental_app/data/db/db_helper.dart';
 import 'package:car_rental_app/data/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:car_rental_app/screen/login_page.dart';
-import 'login_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -21,13 +20,11 @@ class _RegisterPageState extends State<RegisterPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  bool _isLoading = false;
 
   final List<String> _acceptedEmailDomains = ['@gmail.com', '@uisi.ac.id', '@example.com'];
 
   Future<void> _register() async {
     if(_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
 
       try{
         //Cek if username was already exist
@@ -45,7 +42,6 @@ class _RegisterPageState extends State<RegisterPage> {
             )
           );
         }
-        setState(() => _isLoading = false);
         return;
       }
 
@@ -56,6 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
         email: _emailController.text,
         phone: _phoneController.text,
         address: _addressController.text,
+        username: _usernameController.text,
         password: _passwordController.text,
       );
 
@@ -87,7 +84,6 @@ class _RegisterPageState extends State<RegisterPage> {
         }
       } finally {
         if (mounted) {
-          setState(() => _isLoading = false);
         }
       }
     }

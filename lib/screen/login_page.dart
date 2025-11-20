@@ -1,4 +1,3 @@
-import 'package:car_rental_app/data/model/user_model.dart';
 import 'package:car_rental_app/screen/home_page.dart';
 import 'package:car_rental_app/screen/register_page.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,6 @@ class _LoginPageState extends State<LoginPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -27,7 +25,6 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
 
       try {
         //Get user from database
@@ -45,7 +42,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             );
           }
-          setState(() => _isLoading = false);
           return;
         }
 
@@ -59,7 +55,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             );
           }
-          setState(() => _isLoading = false);
           return;
         }
         //Login Succesfully
@@ -88,7 +83,6 @@ class _LoginPageState extends State<LoginPage> {
         }
       } finally {
         if (mounted) {
-          setState(() => _isLoading = false);
         }
       }
     }

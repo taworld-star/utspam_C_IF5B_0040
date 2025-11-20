@@ -1,3 +1,4 @@
+import 'package:car_rental_app/data/db/db_helper.dart';
 import 'package:car_rental_app/data/model/car_model.dart';
 import 'package:car_rental_app/data/model/user_model.dart';
 import 'package:flutter/material.dart';
@@ -17,42 +18,31 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Data dummy mobil - nantinya diganti dengan database
-  final List<CarModel> recommendedCars = [
-    CarModel(
-      id: 1,
-      name: 'Toyota Avanza',
-      type: 'MPV',
-      image: 'https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=500',
-      pricePerDay: 350000,
-      year: 2023,
-      transmission: 'Manual',
-      seats: 7,
-      isAvailable: true,
-    ),
-    CarModel(
-      id: 2,
-      name: 'Honda Civic',
-      type: 'Sedan',
-      image: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?w=500',
-      pricePerDay: 500000,
-      year: 2024,
-      transmission: 'Automatic',
-      seats: 5,
-      isAvailable: true,
-    ),
-    CarModel(
-      id: 3,
-      name: 'Mitsubishi Xpander',
-      type: 'MPV',
-      image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500',
-      pricePerDay: 400000,
-      year: 2023,
-      transmission: 'Automatic',
-      seats: 7,
-      isAvailable: true,
-    ),
-  ];
+  List<CarModel> recommendedCars = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCars();
+  }
+
+  Future<void> _loadCars() async {
+    try {
+      final cars = await DatabaseHelper.instance.getAvailableCars();
+      setState(() {
+        recommendedCars = cars.take(3).toList(); // Get 3 Car First
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() => _isLoading = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error loading cars: $e')),
+        );
+      }
+    }
+  }
 
   void _logout() {
     showDialog(
@@ -89,187 +79,196 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: const Color(0xff605EA1),
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                  ),
-                ),
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Selamat Datang,',
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 14,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              widget.user.name,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                    // Header
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        color: Color(0xff605EA1),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(30),
+                          bottomRight: Radius.circular(30),
                         ),
-                        CircleAvatar(
-                          radius: 25,
-                          backgroundColor: Colors.white,
-                          child: Text(
-                            widget.user.name[0].toUpperCase(),
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xff605EA1),
-                            ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Selamat Datang,',
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    widget.user.name,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              CircleAvatar(
+                                radius: 25,
+                                backgroundColor: Colors.white,
+                                child: Text(
+                                  widget.user.name[0].toUpperCase(),
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xff605EA1),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Menu Grid
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Menu Utama',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    GridView.count(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                      children: [
-                        _buildMenuCard(
-                          icon: Icons.add_circle,
-                          title: 'Tambah Sewa',
-                          color: Colors.blue,
-                          onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => const CarListPage(),
-                            //   ),
-                            // );
-                          },
-                        ),
-                        _buildMenuCard(
-                          icon: Icons.history,
-                          title: 'Riwayat Sewa',
-                          color: Colors.green,
-                          onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   // MaterialPageRoute(
-                            //   //   builder: (context) => HistoryPage(user: widget.user),
-                            //   // ),
-                            // );
-                          },
-                        ),
-                        _buildMenuCard(
-                          icon: Icons.person,
-                          title: 'Profil',
-                          color: Colors.orange,
-                          onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   // MaterialPageRoute(
-                            //   //   builder: (context) => ProfilePage(user: widget.user),
-                            //   // ),
-                            // );
-                          },
-                        ),
-                        _buildMenuCard(
-                          icon: Icons.logout,
-                          title: 'Keluar',
-                          color: Colors.red,
-                          onTap: _logout,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
 
-              const SizedBox(height: 24),
+                    const SizedBox(height: 20),
 
-              // Recommended Cars
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Mobil Rekomendasi',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                    // Menu Grid
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Menu Utama',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            // Navigator.push(
-                            //   context,
-                            //   // MaterialPageRoute(
-                            //   //   builder: (context) => const CarListPage(),
-                            //   // ),
-                            // );
-                          },
-                          child: const Text('Lihat Semua'),
-                        ),
-                      ],
+                          const SizedBox(height: 16),
+                          GridView.count(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            children: [
+                              _buildMenuCard(
+                                icon: Icons.add_circle,
+                                title: 'Tambah Sewa',
+                                color: Colors.blue,
+                                onTap: () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => CarListPage(user: widget.user),
+                                  //   ),
+                                  // ).then((_) => _loadCars()); // Refresh saat kembali
+                                },
+                              ),
+                              _buildMenuCard(
+                                icon: Icons.history,
+                                title: 'Riwayat Sewa',
+                                color: Colors.green,
+                                onTap: () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => HistoryPage(user: widget.user),
+                                  //   ),
+                                  // );
+                                },
+                              ),
+                              _buildMenuCard(
+                                icon: Icons.person,
+                                title: 'Profil',
+                                color: Colors.orange,
+                                onTap: () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => ProfilePage(user: widget.user),
+                                  //   ),
+                                  // );
+                                },
+                              ),
+                              _buildMenuCard(
+                                icon: Icons.logout,
+                                title: 'Keluar',
+                                color: Colors.red,
+                                onTap: _logout,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 12),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: recommendedCars.length,
-                      itemBuilder: (context, index) {
-                        return _buildCarCard(recommendedCars[index]);
-                      },
+
+                    const SizedBox(height: 24),
+
+                    // Recommended Cars
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Mobil Rekomendasi',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => CarListPage(user: widget.user),
+                                  //   ),
+                                  // ).then((_) => _loadCars());
+                                },
+                                child: const Text('Lihat Semua'),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          recommendedCars.isEmpty
+                              ? const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(20),
+                                    child: Text('Belum ada mobil tersedia'),
+                                  ),
+                                )
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: recommendedCars.length,
+                                  itemBuilder: (context, index) {
+                                    return _buildCarCard(recommendedCars[index]);
+                                  },
+                                ),
+                        ],
+                      ),
                     ),
+                    
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
-              
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -336,13 +335,13 @@ class _HomePageState extends State<HomePage> {
         onTap: () {
           // Navigator.push(
           //   context,
-          //   // MaterialPageRoute(
-          //   //   builder: (context) => RentFormPage(
-          //   //     car: car,
-          //   //     user: widget.user,
-          //   //   ),
-          //   // ),
-          // );
+          //   MaterialPageRoute(
+          //     builder: (context) => RentFormPage(
+          //       car: car,
+          //       user: widget.user,
+          //     ),
+          //   ),
+          // ).then((_) => _loadCars());
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
@@ -356,19 +355,23 @@ class _HomePageState extends State<HomePage> {
                   width: 100,
                   height: 80,
                   color: Colors.grey[300],
-                  child: Icon(
-                    Icons.directions_car,
-                    size: 50,
-                    color: Colors.grey[600],
-                  ),
-                  // Uncomment jika ingin pakai network image
-                  // child: Image.network(
-                  //   car.image,
-                  //   fit: BoxFit.cover,
-                  //   errorBuilder: (context, error, stackTrace) {
-                  //     return Icon(Icons.directions_car, size: 50);
-                  //   },
-                  // ),
+                  child: car.image.isNotEmpty
+                      ? Image.asset(
+                          car.image,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(
+                              Icons.directions_car,
+                              size: 50,
+                              color: Colors.grey[600],
+                            );
+                          },
+                        )
+                      : Icon(
+                          Icons.directions_car,
+                          size: 50,
+                          color: Colors.grey[600],
+                        ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -439,13 +442,13 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () {
                       // Navigator.push(
                       //   context,
-                      //   // MaterialPageRoute(
-                      //   //   builder: (context) => RentFormPage(
-                      //   //     car: car,
-                      //   //     user: widget.user,
-                      //   //   ),
-                      //   // ),
-                      // );
+                      //   MaterialPageRoute(
+                      //     builder: (context) => RentFormPage(
+                      //       car: car,
+                      //       user: widget.user,
+                      //     ),
+                      //   ),
+                      // ).then((_) => _loadCars());
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xff605EA1),

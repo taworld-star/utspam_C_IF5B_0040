@@ -14,7 +14,7 @@ class UserModel {
     required this.nik,
     required this.email,
     required this.phone,
-    required this address,
+    required this.address,
     required this.username,
     required this.password,
   });
