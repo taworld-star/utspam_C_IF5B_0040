@@ -73,40 +73,26 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => HomePage(user: user)
-            )
+              builder: (context) => HomePage(user: user),
+            ),
           );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Login failed: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() => _isLoading = false);
         }
       }
     }
   }
-
-  void _login() {
-    if (_formKey.currentState!.validate()) {
-
-      // final loggedInUser = UserModel(
-      //   id: 1,
-      //   name: 'John Doe',
-      //   email: _usernameController.text,
-      //   phone: '081234567890',
-      //   password: _passwordController.text,
-      //   username: _usernameController.text,
-        
-      // );
-
-      Navigator.pushReplacement(
-        context, 
-        MaterialPageRoute(
-          builder: (context) => HomePage(user: UserModel()
-          ) as String,
-        );
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login berhasil')),
-      );
-    }
-  }
-
-
 
   @override
   Widget build(BuildContext context) {

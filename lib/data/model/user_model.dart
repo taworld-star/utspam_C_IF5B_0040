@@ -1,19 +1,21 @@
 class UserModel {
   final int? id;
-  final String username;
   final String name;
   final String nik;
   final String email;
   final String phone;
+  final String address;
+  final String username;
   final String password;
 
   UserModel({
     this.id,
-    required this.username,
     required this.name,
     required this.nik,
     required this.email,
     required this.phone,
+    required this address,
+    required this.username,
     required this.password,
   });
 
@@ -26,6 +28,7 @@ class UserModel {
       'email': email,
       'phone': phone,
       'password': password,
+      'address' : address,
     };
   }
 
@@ -38,6 +41,7 @@ class UserModel {
       email: map['email'],
       phone: map['phone'],
       password: map['password'],
+      address: map['address']
     );
   }
 }
