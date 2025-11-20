@@ -1,3 +1,4 @@
+import 'package:car_rental_app/data/model/user_model.dart';
 import 'package:car_rental_app/screen/home_page.dart';
 import 'package:car_rental_app/screen/register_page.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ void main() {
 
 class RentalCar extends StatelessWidget {
   const RentalCar({super.key});
+
 
   // This widget is the root of your application.
   @override

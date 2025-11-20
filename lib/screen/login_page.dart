@@ -28,20 +28,20 @@ class _LoginPageState extends State<LoginPage> {
   void _login() {
     if (_formKey.currentState!.validate()) {
 
-      final loggedInUser = UserModel(
-        id: 1,
-        name: 'John Doe',
-        email: _usernameController.text,
-        phone: '081234567890',
-        password: _passwordController.text,
-        username: 'johndoe',
+      // final loggedInUser = UserModel(
+      //   id: 1,
+      //   name: 'John Doe',
+      //   email: _usernameController.text,
+      //   phone: '081234567890',
+      //   password: _passwordController.text,
+      //   username: _usernameController.text,
         
-      );
+      // );
 
-      Navigator.pushReplacementNamed(
+      Navigator.pushReplacement(
         context, 
         MaterialPageRoute(
-          builder: (context) => HomePage(user: loggedInUser,)
+          builder: (context) => HomePage(user: UserModel()
           ) as String,
         );
       ScaffoldMessenger.of(context).showSnackBar(
@@ -100,8 +100,8 @@ class _LoginPageState extends State<LoginPage> {
                     if (value == null || value.isEmpty) {
                       return 'Username cannot be empty';
                     }
-                    if (!value.contains('@')) {
-                      return 'Username not valid';
+                    if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value)) {
+                      return 'Username only allows letters, numbers, and underscore';
                     }
                     return null;
                   },

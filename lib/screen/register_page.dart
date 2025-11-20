@@ -18,6 +18,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   final List<String> _acceptedEmailDomains = ['@gmail.com', '@uisi.ac.id', '@example.com'];
 
@@ -122,9 +123,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     TextFormField(
                       controller: _nikController,
                       decoration: InputDecoration(
-                        labelText: 'Enter your NIK',
+                        labelText: 'NIK',
                         hintText: 'Example: 1234567890123456',
-                        prefixIcon: Icon(Icons.location_city_outlined),
+                        prefixIcon: Icon(Icons.badge_outlined),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.grey,
@@ -149,6 +150,44 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                     ),
                     const SizedBox(height: 20),
+
+                    // Email Field
+                    TextFormField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        hintText: 'Example: abcd@gmail.com',
+                        prefixIcon: Icon(Icons.email_outlined),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).primaryColor,
+                            width: 2.0,
+                          ),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Email cannot be empty';
+                        }
+                        
+                        if (!value.contains('@') || !value.contains('.')) {
+                          return 'Invalid email format';
+                        }
+                      
+                        if (!_acceptedEmailDomains.any((domain) => value.endsWith(domain))) {
+                          return 'Only domains ${_acceptedEmailDomains.join(', ')} are accepted';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 10),
         
                     // Phone Number Field
                     TextFormField(
@@ -188,7 +227,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     TextFormField(
                       controller: _addressController,
                       decoration: InputDecoration(
-                        labelText: 'Enter your Address',
+                        labelText: 'Address',
                         hintText: 'Example: Jakarta, Indonesia',
                         prefixIcon: Icon(Icons.location_city_outlined),
                         border: OutlineInputBorder(
@@ -213,14 +252,13 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(height: 10),
         
-                    // Email Field
+                    //Username Field
                     TextFormField(
-                      controller: _emailController,
-                      keyboardType: TextInputType.emailAddress,
+                      controller: _usernameController,
                       decoration: InputDecoration(
-                        labelText: 'Email',
-                        hintText: 'Example: abcd@gmail.com',
-                        prefixIcon: Icon(Icons.email_outlined),
+                        labelText: 'Username',
+                        hintText: 'Enter your username',
+                        prefixIcon: Icon(Icons.account_circle_outlined),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Colors.grey,
@@ -236,15 +274,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Email cannot be empty';
-                        }
-                        
-                        if (!value.contains('@') || !value.contains('.')) {
-                          return 'Invalid email format';
-                        }
-                      
-                        if (!_acceptedEmailDomains.any((domain) => value.endsWith(domain))) {
-                          return 'Only domains ${_acceptedEmailDomains.join(', ')} are accepted';
+                          return 'Username cannot be empty';
                         }
                         return null;
                       },
@@ -298,9 +328,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     FilledButton(
                       onPressed: _register,
                       style: FilledButton.styleFrom(
-                        // backgroundColor: const Color(0xFF9C824A),
                         padding: const EdgeInsets.symmetric(horizontal: 120.0),
-                        minimumSize: const Size.fromHeight(48), // Make button at least 48 high
+                        minimumSize: const Size.fromHeight(48), 
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
