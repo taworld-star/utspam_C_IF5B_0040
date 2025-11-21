@@ -1,4 +1,4 @@
-import 'package:car_rental_app/data/db/db_helper.dart';
+import 'package:car_rental_app/data/db/user_dao.dart';
 import 'package:car_rental_app/data/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:car_rental_app/screen/login_page.dart';
@@ -19,7 +19,10 @@ class _RegisterPageState extends State<RegisterPage> {
   final _addressController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _userDao = false;
+
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   final List<String> _acceptedEmailDomains = ['@gmail.com', '@uisi.ac.id', '@example.com'];
 
@@ -28,7 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
       try{
         //Cek if username was already exist
-        final isExists = await DatabaseHelper.instance.isUsernameExists(
+        final isExists = await _userDao.isUsernameExists(
           _usernameController.text,
         );
 
@@ -57,7 +60,7 @@ class _RegisterPageState extends State<RegisterPage> {
       );
 
       //Save to Database
-      await DatabaseHelper.instance.createUser(newUser);
+      await _userDao.insert(newUser);
 
       if(mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -84,6 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
         }
       } finally {
         if (mounted) {
+          setState(() => _isLoading = false);
         }
       }
     }
@@ -105,10 +109,11 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar( 
-        leading: Icon(
-           Icons.arrow_back,
+        leading: IconButton(
+           icon: const Icon(Icons.arrow_back),
+           onPressed: () => Navigator.pop(context),
         ),
-        title: Text('Registrasi Akun'),
+        title: Text('Registration Account'),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -146,6 +151,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     // Name Field
                     TextFormField(
                       controller: _nameController,
+                      enabled: !_isLoading,
                       decoration: InputDecoration(
                         labelText: 'FullName',
                         hintText: 'Enter your name',

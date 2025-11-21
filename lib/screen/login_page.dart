@@ -1,7 +1,7 @@
 import 'package:car_rental_app/screen/home_page.dart';
 import 'package:car_rental_app/screen/register_page.dart';
 import 'package:flutter/material.dart';
-import 'package:car_rental_app/data/db/db_helper.dart';
+import 'package:car_rental_app/data/db/user_dao.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,7 +14,9 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+   final UserDao _userDao = UserDao();
   bool _obscurePassword = true;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -28,8 +30,7 @@ class _LoginPageState extends State<LoginPage> {
 
       try {
         //Get user from database
-
-        final user = await DatabaseHelper.instance.getUserByUsername(
+        final user = await _userDao.findByUsername(
           _usernameController.text,
         );
         
