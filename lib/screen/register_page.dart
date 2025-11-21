@@ -19,15 +19,20 @@ class _RegisterPageState extends State<RegisterPage> {
   final _addressController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _userDao = false;
+  final _userDao = UserDao();
 
   bool _obscurePassword = true;
   bool _isLoading = false;
 
-  final List<String> _acceptedEmailDomains = ['@gmail.com', '@uisi.ac.id', '@example.com'];
+  final List<String> _acceptedEmailDomains = [
+    '@gmail.com',
+    '@uisi.ac.id',
+    '@example.com',
+    '@yahoo.com'];
 
   Future<void> _register() async {
     if(_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
 
       try{
         //Cek if username was already exist
@@ -48,7 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
         return;
       }
 
-      //For new user
+      //Create new user
       final newUser = UserModel(
         name: _nameController.text,
         nik: _nikController.text,
@@ -115,6 +120,8 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
         title: Text('Registration Account'),
         centerTitle: true,
+        backgroundColor: const Color(0xff605EA1), // ← TAMBAHKAN COLOR
+        foregroundColor: Colors.white,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -153,7 +160,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: _nameController,
                       enabled: !_isLoading,
                       decoration: InputDecoration(
-                        labelText: 'FullName',
+                        labelText: 'Full Name',
                         hintText: 'Enter your name',
                         prefixIcon: Icon(Icons.person_outline),
                         border: OutlineInputBorder(
@@ -171,7 +178,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Name cannot Empty';
+                          return 'Name cannot be Empty';
                         }
                         return null;
                       },
@@ -181,6 +188,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     // Nik Field
                     TextFormField(
                       controller: _nikController,
+                      enabled: !_isLoading,
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: 'NIK',
                         hintText: 'Example: 1234567890123456',
@@ -202,7 +211,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         if (value == null || value.isEmpty) {
                           return 'NIK cannot be empty';
                         }
-                        if(value.length < 16 || value.length > 16){
+                        if(value.length != 16){
                           return 'NIK must be 16 digits';
                         }
                         return null;
@@ -213,10 +222,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     // Email Field
                     TextFormField(
                       controller: _emailController,
+                      enabled: !_isLoading,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         labelText: 'Email',
-                        hintText: 'Example: abcd@gmail.com',
+                        hintText: 'Exp: abcd@gmail.com',
                         prefixIcon: Icon(Icons.email_outlined),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -251,6 +261,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     // Phone Number Field
                     TextFormField(
                       controller: _phoneController,
+                      enabled: !_isLoading,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
                         labelText: 'Phone Number',
@@ -285,6 +296,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     // Address Field
                     TextFormField(
                       controller: _addressController,
+                      enabled: !_isLoading,
                       decoration: InputDecoration(
                         labelText: 'Address',
                         hintText: 'Example: Jakarta, Indonesia',
@@ -314,6 +326,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     //Username Field
                     TextFormField(
                       controller: _usernameController,
+                      enabled: !_isLoading,
                       decoration: InputDecoration(
                         labelText: 'Username',
                         hintText: 'Enter your username',
@@ -335,6 +348,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         if (value == null || value.isEmpty) {
                           return 'Username cannot be empty';
                         }
+                        if (value.length < 4) {
+                          return 'Username minimum 3 characters';
+                        }
                         return null;
                       },
                     ),
@@ -343,6 +359,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     // Password Field
                     TextFormField(
                       controller: _passwordController,
+                      enabled: !_isLoading,
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
                         labelText: 'Password',
@@ -385,31 +402,46 @@ class _RegisterPageState extends State<RegisterPage> {
         
                     // Register Button
                     FilledButton(
-                      onPressed: _register,
+                      onPressed: _isLoading ? null : _register,
                       style: FilledButton.styleFrom(
+                        backgroundColor: const Color(0xff605EA1),
+                        foregroundColor: Colors.white,
+                        disabledBackgroundColor: Colors.grey,
                         padding: const EdgeInsets.symmetric(horizontal: 120.0),
                         minimumSize: const Size.fromHeight(48), 
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                       ),
-                      child: const Text(
-                        'Register',
-                        style: TextStyle(fontSize: 18, 
-                        fontWeight: FontWeight.bold,
-                        // color: Colors.white
+
+                      child: _isLoading
+                        ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
+                      )
+                         : const Text(
+                          'Register',
+                          style: TextStyle(fontSize: 18, 
+                          fontWeight: FontWeight.bold,
+                          // color: Colors.white
+                          ),
                         ),
                       ),
-                    ),
                     const SizedBox(height: 30),
         
                     // Login Link
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text('Have Account? '),
+                        const Text('Have an account? '),
                         TextButton( 
-                          onPressed: () {
+                          onPressed: _isLoading
+                          ? null
+                          : () {
                             Navigator.push(context,
                              MaterialPageRoute(builder: (context) => const LoginPage()));
                           },

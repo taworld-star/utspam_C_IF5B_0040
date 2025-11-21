@@ -9,11 +9,7 @@ class DetailRentalPage extends StatefulWidget {
   final RentalModel rental;
   final UserModel user;
 
-  const DetailRentalPage({
-    super.key,
-    required this.rental,
-    required this.user,
-  });
+  const DetailRentalPage({super.key, required this.rental, required this.user});
 
   @override
   State<DetailRentalPage> createState() => _RentalDetailPageState();
@@ -33,11 +29,9 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
   Future<void> _refreshRental() async {
     if (_rental.id == null) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('ID rental tidak valid'),
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('ID rental tidak valid')));
       }
       return;
     }
@@ -50,9 +44,9 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
   }
@@ -60,11 +54,9 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
   Future<void> _cancelRental() async {
     if (_rental.id == null) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('ID rental tidak valid')
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('ID rental tidak valid')));
       }
     }
     final confirm = await showDialog<bool>(
@@ -97,7 +89,7 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
 
     try {
       await _rentalDao.updateStatus(_rental.id!, 'cancelled');
-      
+
       await _refreshRental();
 
       if (mounted) {
@@ -118,8 +110,8 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
         );
       }
     } finally {
-      if (mounted){
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
       }
     }
   }
@@ -175,237 +167,263 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          :RefreshIndicator(
-            onRefresh: _refreshRental,
-             child :SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  // Status Header
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: _getStatusColor(_rental.status),
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(30),
-                        bottomRight: Radius.circular(30),
+          : RefreshIndicator(
+              onRefresh: _refreshRental,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    // Status Header
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: _getStatusColor(_rental.status),
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(30),
+                          bottomRight: Radius.circular(30),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            _getStatusIcon(_rental.status),
+                            size: 60,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            _getStatusText(_rental.status),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'ID Transaksi: #${_rental.id?.toString().padLeft(4, '0')}',
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Icon(
-                          _getStatusIcon(_rental.status),
-                          size: 60,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          _getStatusText(_rental.status),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+
+                    const SizedBox(height: 20),
+
+                    // Detail Cards
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Car Info Card
+                          _buildInfoCard(
+                            title: 'Informasi Mobil',
+                            icon: Icons.directions_car,
+                            children: [
+                              _buildInfoRow('Nama Mobil', _rental.carName),
+                            ],
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'ID Transaksi: #${_rental.id?.toString().padLeft(4, '0')}',
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 14,
+
+                          const SizedBox(height: 16),
+
+                          // Renter Info Card
+                          _buildInfoCard(
+                            title: 'Informasi Penyewa',
+                            icon: Icons.person,
+                            children: [
+                              _buildInfoRow('Nama Penyewa', _rental.renterName),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
 
-                  const SizedBox(height: 20),
+                          const SizedBox(height: 16),
 
-                  // Detail Cards
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Car Info Card
-                        _buildInfoCard(
-                          title: 'Informasi Mobil',
-                          icon: Icons.directions_car,
-                          children: [
-                            _buildInfoRow('Nama Mobil', _rental.carName),
-                          ],
-                        ),
+                          // Rental Period Card
+                          _buildInfoCard(
+                            title: 'Periode Sewa',
+                            icon: Icons.calendar_today,
+                            children: [
+                              _buildInfoRow(
+                                'Tanggal Mulai',
+                                DateFormat(
+                                  'dd MMMM yyyy',
+                                  'id_ID',
+                                ).format(_rental.startDate),
+                              ),
+                              const Divider(),
+                              _buildInfoRow(
+                                'Tanggal Selesai',
+                                DateFormat(
+                                  'dd MMMM yyyy',
+                                  'id_ID',
+                                ).format(_rental.endDate),
+                              ),
+                              const Divider(),
+                              _buildInfoRow(
+                                'Lama Sewa',
+                                '${_rental.rentalDays} hari',
+                              ),
+                            ],
+                          ),
 
-                        const SizedBox(height: 16),
+                          const SizedBox(height: 16),
 
-                        // Renter Info Card
-                        _buildInfoCard(
-                          title: 'Informasi Penyewa',
-                          icon: Icons.person,
-                          children: [
-                            _buildInfoRow('Nama Penyewa', _rental.renterName),
-                          ],
-                        ),
+                          // Payment Info Card
+                          _buildInfoCard(
+                            title: 'Informasi Pembayaran',
+                            icon: Icons.payment,
+                            children: [
+                              _buildInfoRow(
+                                'Harga per Hari',
+                                'Rp ${NumberFormat('#,###', 'id_ID').format(_rental.totalPrice ~/ _rental.rentalDays)}',
+                              ),
+                              const Divider(),
+                              _buildInfoRow(
+                                'Jumlah Hari',
+                                '${_rental.rentalDays} hari',
+                              ),
+                              const Divider(),
+                              _buildInfoRow(
+                                'Total Pembayaran',
+                                'Rp ${NumberFormat('#,###', 'id_ID').format(_rental.totalPrice)}',
+                                isHighlight: true,
+                              ),
+                            ],
+                          ),
 
-                        const SizedBox(height: 16),
+                          const SizedBox(height: 16),
 
-                        // Rental Period Card
-                        _buildInfoCard(
-                          title: 'Periode Sewa',
-                          icon: Icons.calendar_today,
-                          children: [
-                            _buildInfoRow(
-                              'Tanggal Mulai',
-                              DateFormat('dd MMMM yyyy', 'id_ID').format(_rental.startDate),
-                            ),
-                            const Divider(),
-                            _buildInfoRow(
-                              'Tanggal Selesai',
-                              DateFormat('dd MMMM yyyy', 'id_ID').format(_rental.endDate),
-                            ),
-                            const Divider(),
-                            _buildInfoRow(
-                              'Lama Sewa',
-                              '${_rental.rentalDays} hari',
-                            ),
-                          ],
-                        ),
+                          // Status Card
+                          _buildInfoCard(
+                            title: 'Status Penyewaan',
+                            icon: Icons.info_outline,
+                            children: [
+                              _buildInfoRow(
+                                'Status',
+                                _getStatusText(_rental.status),
+                              ),
+                              const Divider(),
+                              _buildInfoRow(
+                                'Tanggal Transaksi',
+                                DateFormat(
+                                  'dd MMMM yyyy, HH:mm',
+                                  'id_ID',
+                                ).format(_rental.createdAt),
+                              ),
+                            ],
+                          ),
 
-                        const SizedBox(height: 16),
+                          const SizedBox(height: 24),
 
-                        // Payment Info Card
-                        _buildInfoCard(
-                          title: 'Informasi Pembayaran',
-                          icon: Icons.payment,
-                          children: [
-                            _buildInfoRow(
-                              'Harga per Hari',
-                              'Rp ${NumberFormat('#,###', 'id_ID').format(_rental.totalPrice ~/ _rental.rentalDays)}',
-                            ),
-                            const Divider(),
-                            _buildInfoRow(
-                              'Jumlah Hari',
-                              '${_rental.rentalDays} hari',
-                            ),
-                            const Divider(),
-                            _buildInfoRow(
-                              'Total Pembayaran',
-                              'Rp ${NumberFormat('#,###', 'id_ID').format(_rental.totalPrice)}',
-                              isHighlight: true,
-                            ),
-                          ],
-                        ),
+                          // Action Buttons
+                          Column(
+                            children: [
+                              // Tombol Edit (hanya untuk status aktif)
+                              if (_rental.status == 'active')
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: ElevatedButton.icon(
+                                    onPressed: _isLoading
+                                        ? null
+                                        : () async {
+                                            final result = await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditRentalPage(
+                                                      rental: _rental,
+                                                      user: widget.user,
+                                                    ),
+                                              ),
+                                            );
 
-                        const SizedBox(height: 16),
-
-                        // Status Card
-                        _buildInfoCard(
-                          title: 'Status Penyewaan',
-                          icon: Icons.info_outline,
-                          children: [
-                            _buildInfoRow(
-                              'Status',
-                              _getStatusText(_rental.status),
-                            ),
-                            const Divider(),
-                            _buildInfoRow(
-                              'Tanggal Transaksi',
-                              DateFormat('dd MMMM yyyy, HH:mm', 'id_ID').format(_rental.createdAt),
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 24),
-
-                        // Action Buttons
-                        Column(
-                          children: [
-                            // Tombol Edit (hanya untuk status aktif)
-                            if (_rental.status == 'active')
-                              SizedBox(
-                                width: double.infinity,
-                                height: 50,
-                                child: ElevatedButton.icon(
-                                  onPressed: () async {
-                                    final result = await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => EditRentalPage(
-                                          rental: _rental,
-                                          user: widget.user,
-                                        ),
+                                            // Refresh data jika ada perubahan
+                                            if (result == true) {
+                                              await _refreshRental();
+                                            }
+                                          },
+                                    icon: const Icon(Icons.edit),
+                                    label: const Text('Edit Sewa'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xff605EA1),
+                                      foregroundColor: Colors.white,
+                                      disabledBackgroundColor: Colors.grey,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
-                                    );
-
-                                    // Refresh data jika ada perubahan
-                                    if (result == true) {
-                                      await _refreshRental();
-                                    }
-                                  },
-                                  icon: const Icon(Icons.edit),
-                                  label: const Text('Edit Sewa'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xff605EA1),
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
                                 ),
-                              ),
 
-                            if (_rental.status == 'active') const SizedBox(height: 12),
+                              if (_rental.status == 'active')
+                                const SizedBox(height: 12),
 
-                            // Tombol Batalkan (hanya untuk status aktif)
-                            if (_rental.status == 'active')
+                              // Tombol Batalkan (hanya untuk status aktif)
+                              if (_rental.status == 'active')
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: OutlinedButton.icon(
+                                    onPressed: _isLoading
+                                        ? null
+                                        : _cancelRental,
+                                    icon: const Icon(Icons.cancel),
+                                    label: const Text('Batalkan Sewa'),
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: Colors.red,
+                                      side: const BorderSide(color: Colors.red),
+                                      disabledForegroundColor: Colors.grey,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                              if (_rental.status == 'active')
+                                const SizedBox(height: 12),
+
+                              // Tombol Kembali ke Riwayat
                               SizedBox(
                                 width: double.infinity,
                                 height: 50,
                                 child: OutlinedButton.icon(
-                                  onPressed: _cancelRental,
-                                  icon: const Icon(Icons.cancel),
-                                  label: const Text('Batalkan Sewa'),
+                                  onPressed: _isLoading
+                                      ? null
+                                      : () {
+                                          Navigator.pop(
+                                            context,
+                                            true,
+                                          ); // Return true untuk refresh history
+                                        },
+                                  icon: const Icon(Icons.arrow_back),
+                                  label: const Text('Kembali ke Riwayat'),
                                   style: OutlinedButton.styleFrom(
-                                    foregroundColor: Colors.red,
-                                    side: const BorderSide(color: Colors.red),
+                                    foregroundColor: const Color(0xff605EA1),
+                                    side: const BorderSide(
+                                      color: Color(0xff605EA1),
+                                    ),
+                                    disabledForegroundColor: Colors.grey,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
                                 ),
                               ),
-
-                            if (_rental.status == 'active') const SizedBox(height: 12),
-
-                            // Tombol Kembali ke Riwayat
-                            SizedBox(
-                              width: double.infinity,
-                              height: 50,
-                              child: OutlinedButton.icon(
-                                onPressed: () {
-                                  Navigator.pop(context, true); // Return true untuk refresh history
-                                },
-                                icon: const Icon(Icons.arrow_back),
-                                label: const Text('Kembali ke Riwayat'),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: const Color(0xff605EA1),
-                                  side: const BorderSide(color: Color(0xff605EA1)),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
     );
   }
 
@@ -458,28 +476,28 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
           ),
           const SizedBox(width: 8),
           Expanded(
             flex: 3,
-              child: Text(
-                value,
-                style: TextStyle(
-                  fontSize: isHighlight ? 18 : 14,
-                  fontWeight: isHighlight ? FontWeight.bold : FontWeight.w500,
-                  color: isHighlight ? const Color(0xff605EA1) : Colors.black87,
-                ),
-                textAlign: TextAlign.right,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: isHighlight ? 18 : 14,
+                fontWeight: isHighlight ? FontWeight.bold : FontWeight.w500,
+                color: isHighlight ? const Color(0xff605EA1) : Colors.black87,
               ),
+              textAlign: TextAlign.right,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
+          ),
         ],
       ),
     );

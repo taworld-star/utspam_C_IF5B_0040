@@ -1,4 +1,4 @@
-import 'package:car_rental_app/data/db/db_helper.dart';
+import 'package:car_rental_app/data/db/rental_dao.dart';
 import 'package:car_rental_app/data/model/car_model.dart';
 import 'package:car_rental_app/data/model/rental_model.dart';
 import 'package:car_rental_app/data/model/user_model.dart';
@@ -21,6 +21,7 @@ class RentFormPage extends StatefulWidget {
 
 class _RentFormPageState extends State<RentFormPage> {
   final _formKey = GlobalKey<FormState>();
+  final _rentalDao = RentalDao();
   final _renterNameController = TextEditingController();
   final _rentalDaysController = TextEditingController();
   
@@ -104,6 +105,68 @@ class _RentFormPageState extends State<RentFormPage> {
         return;
       }
 
+      //Null check to user.id and car.id
+      if (widget.user.id == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('User ID tidak valid'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+
+      if (widget.car.id == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Car ID tidak valid'),
+            backgroundColor: Colors.red,
+          )
+        );
+      }
+
+
+       // Konfirmasi sebelum submit
+      final confirm = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Konfirmasi Penyewaan'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Mobil: ${widget.car.name}'),
+              Text('Penyewa: ${_renterNameController.text}'),
+              Text('Lama Sewa: ${_rentalDaysController.text} hari'),
+              Text(
+                'Total: Rp ${NumberFormat('#,###', 'id_ID').format(_totalPrice)}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Apakah data sudah benar?',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff605EA1),
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Ya, Konfirmasi'),
+            ),
+          ],
+        ),
+      );
+
+      if (confirm != true) return;
+
       setState(() => _isLoading = true);
 
       try {
@@ -118,7 +181,7 @@ class _RentFormPageState extends State<RentFormPage> {
           totalPrice: _totalPrice,
         );
 
-        await DatabaseHelper.instance.createRental(rental);
+        await _rentalDao.insert(rental);
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -209,6 +272,9 @@ class _RentFormPageState extends State<RentFormPage> {
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -235,6 +301,8 @@ class _RentFormPageState extends State<RentFormPage> {
                         fontWeight: FontWeight.bold,
                         color: Color(0xff605EA1),
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -263,6 +331,7 @@ class _RentFormPageState extends State<RentFormPage> {
                     // Renter Name
                     TextFormField(
                       controller: _renterNameController,
+                      enabled: !_isLoading,
                       decoration: InputDecoration(
                         labelText: 'Nama Penyewa',
                         hintText: 'Masukkan nama penyewa',
@@ -284,7 +353,7 @@ class _RentFormPageState extends State<RentFormPage> {
 
                     // Start Date
                     InkWell(
-                      onTap: _selectStartDate,
+                      onTap: _isLoading ? null : _selectStartDate,
                       child: InputDecorator(
                         decoration: InputDecoration(
                           labelText: 'Tanggal Mulai Sewa',
@@ -294,7 +363,7 @@ class _RentFormPageState extends State<RentFormPage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: _isLoading ? Colors.grey[200] :Colors.white,
                         ),
                         child: Text(
                           _startDate != null
@@ -311,6 +380,7 @@ class _RentFormPageState extends State<RentFormPage> {
                     // Rental Days
                     TextFormField(
                       controller: _rentalDaysController,
+                      enabled: !_isLoading,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: 'Lama Sewa (hari)',
@@ -373,6 +443,7 @@ class _RentFormPageState extends State<RentFormPage> {
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const Text(
                             'Total Pembayaran',
@@ -381,12 +452,18 @@ class _RentFormPageState extends State<RentFormPage> {
                               fontSize: 16,
                             ),
                           ),
-                          Text(
-                            'Rp ${NumberFormat('#,###', 'id_ID').format(_totalPrice)}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Text(
+                              'Rp ${NumberFormat('#,###', 'id_ID').format(_totalPrice)}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.right,
                             ),
                           ),
                         ],
@@ -404,13 +481,21 @@ class _RentFormPageState extends State<RentFormPage> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xff605EA1),
                           foregroundColor: Colors.white,
+                          disabledBackgroundColor: Colors.grey,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           elevation: 2,
                         ),
                         child: _isLoading
-                            ? const CircularProgressIndicator(color: Colors.white)
+                            ? SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: const CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                                ),
+                              )
                             : const Text(
                                 'Konfirmasi Penyewaan',
                                 style: TextStyle(

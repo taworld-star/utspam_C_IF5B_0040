@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
 
       try {
         //Get user from database
@@ -37,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
         if (user == null) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+             const SnackBar(
                 content: Text('Username not found'),
                 backgroundColor: Colors.red,
               ),
