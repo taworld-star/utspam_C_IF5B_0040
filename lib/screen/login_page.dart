@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Logo atau Title
-                 Image.asset('assets/images/logoo.png', height: 160),
+                 Image.asset('assets/images/logo1.png', height: 200),
                 
                 const Text(
                   'Rental Car Application',

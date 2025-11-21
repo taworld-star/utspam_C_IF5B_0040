@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 //import 'car_list_page.dart';
 // import 'history_page.dart';
 // import 'profile_page.dart';
-// import 'rent_form_page.dart';
+import 'rental_page.dart';
 import 'login_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -333,15 +333,15 @@ class _HomePageState extends State<HomePage> {
       ),
       child: InkWell(
         onTap: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => RentFormPage(
-          //       car: car,
-          //       user: widget.user,
-          //     ),
-          //   ),
-          // ).then((_) => _loadCars());
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RentFormPage(
+                car: car,
+                user: widget.user,
+              ),
+            ),
+          ).then((_) => _loadCars());
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
@@ -440,15 +440,15 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 8),
                   ElevatedButton(
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => RentFormPage(
-                      //       car: car,
-                      //       user: widget.user,
-                      //     ),
-                      //   ),
-                      // ).then((_) => _loadCars());
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RentFormPage(
+                            car: car,
+                            user: widget.user,
+                          ),
+                        ),
+                      ).then((_) => _loadCars());
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xff605EA1),

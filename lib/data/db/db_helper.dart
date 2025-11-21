@@ -174,18 +174,6 @@ class DatabaseHelper {
     );
   }
 
-  // Update rental
-Future<int> updateRental(RentalModel rental) async {
-  final db = await database;
-  return await db.update(
-    'rentals',
-    rental.toMap(),
-    where: 'id = ?',
-    whereArgs: [rental.id],
-  );
-}
-
-
   // ========== CAR CRUD ==========
   
   // Get all cars
@@ -208,6 +196,17 @@ Future<int> updateRental(RentalModel rental) async {
 
   // ========== RENTAL CRUD ==========
 
+
+ // Update rental
+Future<int> updateRental(RentalModel rental) async {
+  final db = await database;
+  return await db.update(
+    'rentals',
+    rental.toMap(),
+    where: 'id = ?',
+    whereArgs: [rental.id],
+  );
+}
 // Create Rental
 Future<int> createRental(RentalModel rental) async {
   final db = await database;
