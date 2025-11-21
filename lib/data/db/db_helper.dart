@@ -174,6 +174,8 @@ class DatabaseHelper {
     );
   }
 
+  
+
   // ========== CAR CRUD ==========
   
   // Get all cars
