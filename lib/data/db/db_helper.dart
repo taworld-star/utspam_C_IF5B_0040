@@ -174,7 +174,17 @@ class DatabaseHelper {
     );
   }
 
-  
+  // Update rental
+Future<int> updateRental(RentalModel rental) async {
+  final db = await database;
+  return await db.update(
+    'rentals',
+    rental.toMap(),
+    where: 'id = ?',
+    whereArgs: [rental.id],
+  );
+}
+
 
   // ========== CAR CRUD ==========
   
