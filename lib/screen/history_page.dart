@@ -1,4 +1,4 @@
-import 'package:car_rental_app/data/db/db_helper.dart';
+import 'package:car_rental_app/data/db/rental_dao.dart';
 import 'package:car_rental_app/data/model/rental_model.dart';
 import 'package:car_rental_app/data/model/user_model.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +16,7 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  final RentalDao _rentalDao = RentalDao();
   List<RentalModel> _rentals = [];
   bool _isLoading = true;
   String _filterStatus = 'all'; // all, active, completed, cancelled
@@ -27,20 +28,38 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   Future<void> _loadRentals() async {
+    final userId = widget.user.id;
+
+    if (userId == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('User ID tidak valid'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
+  
     setState(() => _isLoading = true);
     
     try {
       List<RentalModel> rentals;
       
-      if (_filterStatus == 'active') {
-        rentals = await DatabaseHelper.instance.getActiveRentals(widget.user.id!);
-      } else {
-        rentals = await DatabaseHelper.instance.getRentalsByUser(widget.user.id!);
-        
-        if (_filterStatus != 'all') {
-          rentals = rentals.where((r) => r.status == _filterStatus).toList();
-        }
-      }
+    switch (_filterStatus) {
+      case 'active':
+        rentals = await _rentalDao.findActiveByUserId(userId);
+        break;
+      case 'completed':
+        rentals = await _rentalDao.findCompletedByUserId(userId);
+        break;
+      case 'cancelled':
+        rentals = await _rentalDao.findCancelledByUserId(userId);
+        break;
+      default:
+        rentals = await _rentalDao.findByUserId(userId);
+    }
       
       setState(() {
         _rentals = rentals;
@@ -91,18 +110,25 @@ class _HistoryPageState extends State<HistoryPage> {
         backgroundColor: const Color(0xff605EA1),
         foregroundColor: Colors.white,
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.home),
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
                   builder: (context) => HomePage(user: widget.user),
                 ),
+                (route) => false,
               );
             },
-            tooltip: 'Kembali ke Beranda',
+            tooltip: 'Kembali ke home page',
           ),
         ],
       ),
@@ -180,7 +206,9 @@ class _HistoryPageState extends State<HistoryPage> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'Belum ada riwayat sewa',
+                              _filterStatus == 'all'
+                                ? 'Belum ada riwayat sewa'
+                                : 'Belum ada transaksi ${_getStatusText(_filterStatus).toLowerCase()}',
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey[600],
@@ -189,7 +217,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             const SizedBox(height: 24),
                             ElevatedButton.icon(
                               onPressed: () {
-                                Navigator.pushReplacement(
+                                Navigator.pop(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => HomePage(user: widget.user),
@@ -225,7 +253,7 @@ class _HistoryPageState extends State<HistoryPage> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.pushReplacement(
+          Navigator.pop(
             context,
             MaterialPageRoute(
               builder: (context) => HomePage(user: widget.user),
@@ -268,7 +296,6 @@ class _HistoryPageState extends State<HistoryPage> {
       ),
       child: InkWell(
         onTap: () {
-          // Push (bukan pushReplacement) agar bisa kembali
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -277,7 +304,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 user: widget.user,
               ),
             ),
-          ).then((_) => _loadRentals()); // Refresh saat kembali
+          ).then((_) => _loadRentals()); // Refresh 
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
@@ -296,8 +323,11 @@ class _HistoryPageState extends State<HistoryPage> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  const SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 12,
@@ -328,11 +358,15 @@ class _HistoryPageState extends State<HistoryPage> {
                 children: [
                   Icon(Icons.person, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 8),
-                  Text(
-                    rental.renterName,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[700],
+                  Expanded(
+                    child: Text(
+                      rental.renterName,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[700],
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -344,11 +378,15 @@ class _HistoryPageState extends State<HistoryPage> {
                 children: [
                   Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 8),
-                  Text(
-                    '${DateFormat('dd MMM yyyy', 'id_ID').format(rental.startDate)} - ${DateFormat('dd MMM yyyy', 'id_ID').format(rental.endDate)}',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[700],
+                  Expanded(
+                    child: Text(
+                      '${DateFormat('dd MMM yyyy', 'id_ID').format(rental.startDate)} - ${DateFormat('dd MMM yyyy', 'id_ID').format(rental.endDate)}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[700],
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -383,12 +421,16 @@ class _HistoryPageState extends State<HistoryPage> {
                       color: Colors.grey,
                     ),
                   ),
-                  Text(
-                    'Rp ${NumberFormat('#,###', 'id_ID').format(rental.totalPrice)}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff605EA1),
+                  Flexible(
+                    child: Text(
+                      'Rp ${NumberFormat('#,###', 'id_ID').format(rental.totalPrice)}',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xff605EA1),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],

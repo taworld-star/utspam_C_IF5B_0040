@@ -1,7 +1,8 @@
-import 'package:car_rental_app/data/db/db_helper.dart';
+import 'package:car_rental_app/data/db/car_dao.dart';
 import 'package:car_rental_app/data/model/car_model.dart';
 import 'package:car_rental_app/data/model/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 //import 'car_list_page.dart';
 import 'history_page.dart';
 // import 'profile_page.dart';
@@ -18,6 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final CarDao _carDao = CarDao();
   List<CarModel> recommendedCars = [];
   bool _isLoading = true;
 
@@ -29,7 +31,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadCars() async {
     try {
-      final cars = await DatabaseHelper.instance.getAvailableCars();
+      final cars = await _carDao.findAvailable();
       setState(() {
         recommendedCars = cars.take(3).toList(); // Get 3 Car First
         _isLoading = false;
@@ -81,7 +83,10 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
+            : RefreshIndicator(
+              onRefresh: _loadCars,
+             child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -270,7 +275,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
       ),
-    );
+    ),
+  );
   }
 
   Widget _buildMenuCard({
@@ -422,22 +428,25 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
+              const SizedBox(width: 8),
               // Price & Button
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    'Rp ${car.pricePerDay ~/ 1000}k',
+                    'Rp ${NumberFormat('#,###', 'id_ID').format(car.pricePerDay)}',
                     style: const TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: Color(0xff605EA1),
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const Text(
                     '/hari',
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 10,
                       color: Colors.grey,
                     ),
                   ),
@@ -458,14 +467,17 @@ class _HomePageState extends State<HomePage> {
                       backgroundColor: const Color(0xff605EA1),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
+                        horizontal: 12,
+                        vertical: 6,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Sewa'),
+                    child: const Text(
+                      'Sewa',
+                      style: TextStyle(fontSize: 12),
+                      ),
                   ),
                 ],
               ),

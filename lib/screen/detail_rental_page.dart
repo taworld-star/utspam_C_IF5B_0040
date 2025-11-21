@@ -1,4 +1,4 @@
-import 'package:car_rental_app/data/db/db_helper.dart';
+import 'package:car_rental_app/data/db/rental_dao.dart';
 import 'package:car_rental_app/data/model/rental_model.dart';
 import 'package:car_rental_app/data/model/user_model.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +20,7 @@ class DetailRentalPage extends StatefulWidget {
 }
 
 class _RentalDetailPageState extends State<DetailRentalPage> {
+  final _rentalDao = RentalDao();
   late RentalModel _rental;
   bool _isLoading = false;
 
@@ -30,8 +31,18 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
   }
 
   Future<void> _refreshRental() async {
+    if (_rental.id == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('ID rental tidak valid'),
+          ),
+        );
+      }
+      return;
+    }
     try {
-      final updated = await DatabaseHelper.instance.getRentalById(_rental.id!);
+      final updated = await _rentalDao.findById(_rental.id!);
       if (updated != null) {
         setState(() {
           _rental = updated;
@@ -47,6 +58,15 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
   }
 
   Future<void> _cancelRental() async {
+    if (_rental.id == null) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('ID rental tidak valid')
+          ),
+        );
+      }
+    }
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -76,7 +96,7 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
     setState(() => _isLoading = true);
 
     try {
-      await DatabaseHelper.instance.updateRentalStatus(_rental.id!, 'cancelled');
+      await _rentalDao.updateStatus(_rental.id!, 'cancelled');
       
       await _refreshRental();
 
@@ -98,7 +118,9 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
         );
       }
     } finally {
+      if (mounted){
       setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -153,7 +175,10 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
+          :RefreshIndicator(
+            onRefresh: _refreshRental,
+             child :SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
                 children: [
                   // Status Header
@@ -380,6 +405,7 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
                 ],
               ),
             ),
+          ),
     );
   }
 
@@ -439,17 +465,21 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
               color: Colors.grey[600],
             ),
           ),
-          Flexible(
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: isHighlight ? 18 : 14,
-                fontWeight: isHighlight ? FontWeight.bold : FontWeight.w500,
-                color: isHighlight ? const Color(0xff605EA1) : Colors.black87,
+          const SizedBox(width: 8),
+          Expanded(
+            flex: 3,
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: isHighlight ? 18 : 14,
+                  fontWeight: isHighlight ? FontWeight.bold : FontWeight.w500,
+                  color: isHighlight ? const Color(0xff605EA1) : Colors.black87,
+                ),
+                textAlign: TextAlign.right,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              textAlign: TextAlign.right,
             ),
-          ),
         ],
       ),
     );

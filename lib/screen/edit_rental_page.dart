@@ -1,4 +1,4 @@
-import 'package:car_rental_app/data/db/db_helper.dart';
+import 'package:car_rental_app/data/db/rental_dao.dart';
 import 'package:car_rental_app/data/model/rental_model.dart';
 import 'package:car_rental_app/data/model/user_model.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +20,7 @@ class EditRentalPage extends StatefulWidget {
 
 class _EditRentalPageState extends State<EditRentalPage> {
   final _formKey = GlobalKey<FormState>();
+  final _rentalDao = RentalDao();
   late TextEditingController _carNameController;
   late TextEditingController _renterNameController;
   late TextEditingController _rentalDaysController;
@@ -133,6 +134,7 @@ class _EditRentalPageState extends State<EditRentalPage> {
               onPressed: () => Navigator.pop(context, true),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xff605EA1),
+                foregroundColor: Colors.white,
               ),
               child: const Text('Simpan'),
             ),
@@ -160,7 +162,7 @@ class _EditRentalPageState extends State<EditRentalPage> {
           createdAt: widget.rental.createdAt,
         );
 
-        await DatabaseHelper.instance.updateRental(updatedRental);
+        await _rentalDao.update(updatedRental);
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -263,6 +265,7 @@ class _EditRentalPageState extends State<EditRentalPage> {
                     // Car Name
                     TextFormField(
                       controller: _carNameController,
+                      enabled: !_isLoading,
                       decoration: InputDecoration(
                         labelText: 'Nama Mobil',
                         hintText: 'Masukkan nama mobil',
@@ -285,6 +288,7 @@ class _EditRentalPageState extends State<EditRentalPage> {
                     // Renter Name
                     TextFormField(
                       controller: _renterNameController,
+                      enabled: !_isLoading,
                       decoration: InputDecoration(
                         labelText: 'Nama Penyewa',
                         hintText: 'Masukkan nama penyewa',
@@ -306,7 +310,7 @@ class _EditRentalPageState extends State<EditRentalPage> {
 
                     // Start Date
                     InkWell(
-                      onTap: _selectStartDate,
+                      onTap: _isLoading ? null : _selectStartDate,
                       child: InputDecorator(
                         decoration: InputDecoration(
                           labelText: 'Tanggal Mulai Sewa',
@@ -316,7 +320,7 @@ class _EditRentalPageState extends State<EditRentalPage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: _isLoading ? Colors.grey[200] : Colors.white,
                         ),
                         child: Text(
                           _startDate != null
@@ -333,6 +337,7 @@ class _EditRentalPageState extends State<EditRentalPage> {
                     // Rental Days
                     TextFormField(
                       controller: _rentalDaysController,
+                      enabled: !_isLoading,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: 'Lama Sewa (hari)',
@@ -452,12 +457,16 @@ class _EditRentalPageState extends State<EditRentalPage> {
                               fontSize: 16,
                             ),
                           ),
-                          Text(
-                            'Rp ${NumberFormat('#,###', 'id_ID').format(_totalPrice)}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                          Flexible(
+                            child: Text(
+                              'Rp ${NumberFormat('#,###', 'id_ID').format(_totalPrice)}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -492,6 +501,7 @@ class _EditRentalPageState extends State<EditRentalPage> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xff605EA1),
                               foregroundColor: Colors.white,
+                              disabledBackgroundColor: Colors.grey,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
