@@ -3,7 +3,7 @@ import 'package:car_rental_app/data/model/car_model.dart';
 import 'package:car_rental_app/data/model/user_model.dart';
 import 'package:flutter/material.dart';
 //import 'car_list_page.dart';
-// import 'history_page.dart';
+import 'history_page.dart';
 // import 'profile_page.dart';
 import 'rental_page.dart';
 import 'login_page.dart';
@@ -409,9 +409,13 @@ class _HomePageState extends State<HomePage> {
                         Icon(Icons.settings, 
                           size: 16, color: Colors.grey[600]),
                         const SizedBox(width: 4),
-                        Text(
-                          car.transmission,
-                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                        Flexible(
+                          child: Text(
+                            car.transmission,
+                            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
