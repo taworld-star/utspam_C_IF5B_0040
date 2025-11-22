@@ -28,6 +28,8 @@
 ### Video Recording Running App
 https://drive.google.com/file/d/1y9VZPBwdr7I5UcX6fJbrqIIkiDpZKbdo/view?usp=sharing
 
+[![Watch the video](https://img.youtube.com/vi/LOOWO1tXHUg/maxresdefault.jpg)](https://www.youtube.com/watch?v=LOOWO1tXHUg)
+
 ## Features
 
 ###  User Management
