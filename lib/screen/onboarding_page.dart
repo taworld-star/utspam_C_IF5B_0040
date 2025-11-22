@@ -131,8 +131,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   ),
                   child: Text(
                     _currentPage == _items.length - 1
-                        ? 'Get Started'
-                        : 'Next',
+                        ? 'Mulai'
+                        : 'Selanjutnya',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
