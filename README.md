@@ -8,8 +8,6 @@
 
 **Aplikasi Penyewaan Mobil Berbasis Flutter dengan Database SQFLite**
 
-[Features](#-features) • [Tech Stack](#-tech-stack) • [Installation](#-installation) • [Usage](#-usage) • [Database](#-database-structure) • [Screenshots](#-screenshots)
-
 </div>
 
 ---
