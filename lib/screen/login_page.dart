@@ -14,7 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-   final UserDao _userDao = UserDao();
+  final UserDao _userDao = UserDao();
   bool _obscurePassword = true;
   bool _isLoading = false;
 
@@ -31,14 +31,12 @@ class _LoginPageState extends State<LoginPage> {
 
       try {
         //Get user from database
-        final user = await _userDao.findByUsername(
-          _usernameController.text,
-        );
-        
+        final user = await _userDao.findByUsername(_usernameController.text);
+
         if (user == null) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-             const SnackBar(
+              const SnackBar(
                 content: Text('Username not found'),
                 backgroundColor: Colors.red,
               ),
@@ -62,16 +60,15 @@ class _LoginPageState extends State<LoginPage> {
         //Login Succesfully
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login successfull'),
+            const SnackBar(
+              content: Text('Login successful'),
+              backgroundColor: Colors.green,
             ),
           );
 
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(user: user),
-            ),
+            MaterialPageRoute(builder: (context) => HomePage(user: user)),
           );
         }
       } catch (e) {
@@ -85,6 +82,7 @@ class _LoginPageState extends State<LoginPage> {
         }
       } finally {
         if (mounted) {
+          setState(() => _isLoading = false);
         }
       }
     }
@@ -102,32 +100,30 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Logo atau Title
-                 Image.asset('assets/images/logo1.png', height: 200),
-                
+                // Logo
+                Image.asset('assets/images/logo1.png', height: 200),
+
                 const Text(
                   'Rental Car Application',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 28,
-                    fontFamily: 'poppins', 
+                    fontFamily: 'poppins',
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const Text(
                   'Welcome to Rental Car Application\n Please login to continue!',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: 'poppins',
-                  ),
+                  style: TextStyle(fontSize: 16, fontFamily: 'poppins'),
                 ),
                 const SizedBox(height: 48),
-                
-                // Email Field
+
+                // Username Field
                 TextFormField(
                   controller: _usernameController,
-                  keyboardType: TextInputType.emailAddress,
+                  enabled: !_isLoading,
+                  keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     labelText: 'Username',
                     hintText: 'Enter your username',
@@ -145,10 +141,11 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Password Field
                 TextFormField(
                   controller: _passwordController,
+                  enabled: !_isLoading,
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
                     labelText: 'Password',
@@ -160,11 +157,13 @@ class _LoginPageState extends State<LoginPage> {
                             ? Icons.visibility
                             : Icons.visibility_off,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
-                      },
+                      onPressed: _isLoading
+                          ? null
+                          : () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
                     ),
                     border: const OutlineInputBorder(),
                   ),
@@ -179,32 +178,46 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Login Button
                 ElevatedButton(
-                  onPressed: _login,
+                  onPressed: _isLoading ? null : _login,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     backgroundColor: Color(0xff605EA1),
                     foregroundColor: Colors.white,
+                    disabledBackgroundColor: Colors.grey,
                   ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.white,
+                            ),
+                          ),
+                        )
+                      : const Text('Login', style: TextStyle(fontSize: 16)),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Register Link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Cannot have account?'),
+                    const Text("Don't have an account?"),
                     TextButton(
-                      onPressed: () {
-                        Navigator.push(context, 
-                        MaterialPageRoute(
-                          builder: (context) => const RegisterPage()));
+                      onPressed: _isLoading
+                          ? null
+                          : () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterPage(),
+                          ),
+                        );
                       },
                       child: const Text('Register'),
                     ),
