@@ -19,8 +19,9 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2, 
       onCreate: _createDB,
+      onUpgrade: _onUpgrade, 
     );
   }
 
@@ -55,26 +56,62 @@ class DatabaseHelper {
     ''');
 
     // Tabel Rentals
-  await db.execute('''
-    CREATE TABLE rentals (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      user_id INTEGER NOT NULL,
-      car_id INTEGER NOT NULL,
-      car_name TEXT NOT NULL,
-      renter_name TEXT NOT NULL,
-      rental_days INTEGER NOT NULL,
-      start_date TEXT NOT NULL,
-      end_date TEXT NOT NULL,
-      total_price INTEGER NOT NULL,
-      status TEXT NOT NULL DEFAULT 'active',
-      created_at TEXT NOT NULL,
-      FOREIGN KEY (user_id) REFERENCES users (id),
-      FOREIGN KEY (car_id) REFERENCES cars (id)
-    )
-  ''');
+    await db.execute('''
+      CREATE TABLE rentals (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        car_id INTEGER NOT NULL,
+        car_name TEXT NOT NULL,
+        renter_name TEXT NOT NULL,
+        rental_days INTEGER NOT NULL,
+        start_date TEXT NOT NULL,
+        end_date TEXT NOT NULL,
+        total_price INTEGER NOT NULL,
+        status TEXT NOT NULL DEFAULT 'active',
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users (id),
+        FOREIGN KEY (car_id) REFERENCES cars (id)
+      )
+    ''');
 
     // Insert dummy cars
     await _insertDummyCars(db);
+  }
+
+  
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    print(' Upgrading database from v$oldVersion to v$newVersion');
+    
+    if (oldVersion < 2) {
+      // Cek apakah tabel rentals sudah ada
+      final result = await db.rawQuery(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='rentals'"
+      );
+      
+      if (result.isEmpty) {
+        print('➕ Creating rentals table...');
+        await db.execute('''
+          CREATE TABLE rentals (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            car_id INTEGER NOT NULL,
+            car_name TEXT NOT NULL,
+            renter_name TEXT NOT NULL,
+            rental_days INTEGER NOT NULL,
+            start_date TEXT NOT NULL,
+            end_date TEXT NOT NULL,
+            total_price INTEGER NOT NULL,
+            status TEXT NOT NULL DEFAULT 'active',
+            created_at TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users (id),
+            FOREIGN KEY (car_id) REFERENCES cars (id)
+          )
+        ''');
+        print(' Rentals table created successfully');
+      } else {
+        print(' Rentals table already exists');
+      }
+    }
   }
 
   Future _insertDummyCars(Database db) async {
@@ -109,6 +146,26 @@ class DatabaseHelper {
         'seats': 7,
         'is_available': 1,
       },
+      {
+        'name': 'Toyota Fortuner',
+        'type': 'SUV',
+        'image': 'assets/images/fortuner.png',
+        'price_per_day': 800000,
+        'year': 2024,
+        'transmission': 'Automatic',
+        'seats': 7,
+        'is_available': 1,
+      },
+      {
+        'name': 'Suzuki Ertiga',
+        'type': 'MPV',
+        'image': 'assets/images/ertiga.png',
+        'price_per_day': 300000,
+        'year': 2023,
+        'transmission': 'Manual',
+        'seats': 7,
+        'is_available': 1,
+      },
     ];
 
     for (var car in cars) {
@@ -116,7 +173,6 @@ class DatabaseHelper {
     }
   }
 
-  // Close database
   Future close() async {
     final db = await database;
     db.close();

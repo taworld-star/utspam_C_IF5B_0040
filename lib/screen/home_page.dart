@@ -3,14 +3,15 @@ import 'package:car_rental_app/data/model/car_model.dart';
 import 'package:car_rental_app/data/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-//import 'car_list_page.dart';
-// import 'profile_page.dart';
+import 'car_list_page.dart';
+import 'profile_page.dart';
 import 'rental_page.dart';
 import 'login_page.dart';
+import 'history_page.dart';
 
 class HomePage extends StatefulWidget {
   final UserModel user;
-  
+
   const HomePage({super.key, required this.user});
 
   @override
@@ -29,18 +30,27 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _loadCars() async {
+    setState(() => _isLoading = true);
+
     try {
       final cars = await _carDao.findAvailable();
-      setState(() {
-        recommendedCars = cars.take(3).toList(); // Get 3 Car First
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading cars: $e')),
-        );
+        setState(() {
+          recommendedCars = cars.take(3).toList(); // Get 3 Car First
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error loading cars: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
     }
   }
@@ -83,199 +93,237 @@ class _HomePageState extends State<HomePage> {
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : RefreshIndicator(
-              onRefresh: _loadCars,
-             child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Header
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: const BoxDecoration(
-                        color: Color(0xff605EA1),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(30),
-                          bottomRight: Radius.circular(30),
+                onRefresh: _loadCars,
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: const BoxDecoration(
+                          color: Color(0xff605EA1),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(30),
+                            bottomRight: Radius.circular(30),
+                          ),
                         ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Selamat Datang,',
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 14,
-                                    ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Selamat Datang,',
+                                        style: TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        widget.user.name,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    widget.user.name,
+                                ),
+                                const SizedBox(width: 8),
+                                CircleAvatar(
+                                  radius: 25,
+                                  backgroundColor: Colors.white,
+                                  child: Text(
+                                    widget.user.name.isNotEmpty
+                                      ? widget.user.name[0].toUpperCase()
+                                      : '?',
                                     style: const TextStyle(
-                                      color: Colors.white,
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
+                                      color: Color(0xff605EA1),
                                     ),
                                   ),
-                                ],
-                              ),
-                              CircleAvatar(
-                                radius: 25,
-                                backgroundColor: Colors.white,
-                                child: Text(
-                                  widget.user.name[0].toUpperCase(),
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xff605EA1),
-                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // Menu Grid
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Menu Utama',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                              ],
                             ),
-                          ),
-                          const SizedBox(height: 16),
-                          GridView.count(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 16,
-                            crossAxisSpacing: 16,
-                            children: [
-                              _buildMenuCard(
-                                icon: Icons.add_circle,
-                                title: 'Tambah Sewa',
-                                color: Colors.blue,
-                                onTap: () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => CarListPage(user: widget.user),
-                                  //   ),
-                                  // ).then((_) => _loadCars()); // Refresh saat kembali
-                                },
-                              ),
-                              _buildMenuCard(
-                                icon: Icons.history,
-                                title: 'Riwayat Sewa',
-                                color: Colors.green,
-                                onTap: () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => HistoryPage(user: widget.user),
-                                  //   ),
-                                  // );
-                                },
-                              ),
-                              _buildMenuCard(
-                                icon: Icons.person,
-                                title: 'Profil',
-                                color: Colors.orange,
-                                onTap: () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => ProfilePage(user: widget.user),
-                                  //   ),
-                                  // );
-                                },
-                              ),
-                              _buildMenuCard(
-                                icon: Icons.logout,
-                                title: 'Keluar',
-                                color: Colors.red,
-                                onTap: _logout,
-                              ),
-                            ],
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 20),
 
-                    // Recommended Cars
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Mobil Rekomendasi',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                      // Menu Grid
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Menu Utama',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => CarListPage(user: widget.user),
-                                  //   ),
-                                  // ).then((_) => _loadCars());
-                                },
-                                child: const Text('Lihat Semua'),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          recommendedCars.isEmpty
-                              ? const Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(20),
-                                    child: Text('Belum ada mobil tersedia'),
-                                  ),
-                                )
-                              : ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: recommendedCars.length,
-                                  itemBuilder: (context, index) {
-                                    return _buildCarCard(recommendedCars[index]);
+                            ),
+                            const SizedBox(height: 16),
+                            GridView.count(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 16,
+                              crossAxisSpacing: 16,
+                              childAspectRatio: 1.1,
+                              children: [
+                                _buildMenuCard(
+                                  icon: Icons.add_circle,
+                                  title: 'Tambah Sewa',
+                                  color: Colors.blue,
+                                  onTap: () async {
+                                    final result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CarListPage(user: widget.user),
+                                      ),
+                                    );
+                                    if (result == true) {
+                                      await _loadCars();
+                                    }
                                   },
                                 ),
-                        ],
+                                _buildMenuCard(
+                                  icon: Icons.history,
+                                  title: 'Riwayat Sewa',
+                                  color: Colors.green,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            HistoryPage(user: widget.user),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                _buildMenuCard(
+                                  icon: Icons.person,
+                                  title: 'Profil',
+                                  color: Colors.orange,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProfilePage(user: widget.user),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                _buildMenuCard(
+                                  icon: Icons.logout,
+                                  title: 'Keluar',
+                                  color: Colors.red,
+                                  onTap: _logout,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    
-                    const SizedBox(height: 20),
-                  ],
+
+                      const SizedBox(height: 24),
+
+                      // Recommended Cars
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Mobil Rekomendasi',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    final result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CarListPage(user: widget.user),
+                                      ),
+                                    );
+                                    if (result == true) {
+                                      await _loadCars();
+                                    }
+                                  },
+                                  child: const Text('Lihat Semua'),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            recommendedCars.isEmpty
+                                ?  Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(20),
+                                      child: Column (
+                                        children: [
+                                          Icon(
+                                            Icons.car_rental,
+                                            size: 60,
+                                            color: Colors.grey[400],
+                                          ),
+                                          const SizedBox(height: 12),
+                                          const Text(
+                                            'Belum ada mobil tersedia',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: recommendedCars.length,
+                                    itemBuilder: (context, index) {
+                                      return _buildCarCard(
+                                        recommendedCars[index],
+                                      );
+                                    },
+                                  ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 ),
               ),
       ),
-    ),
-  );
+    );
   }
 
   Widget _buildMenuCard({
@@ -309,19 +357,18 @@ class _HomePageState extends State<HomePage> {
                 color: color.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                icon,
-                size: 40,
-                color: color,
-              ),
+              child: Icon(icon, size: 40, color: color),
             ),
             const SizedBox(height: 12),
             Text(
               title,
               style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+                fontSize: 16, 
+                fontWeight: FontWeight.w600
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
@@ -333,25 +380,26 @@ class _HomePageState extends State<HomePage> {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => RentFormPage(
-                car: car,
-                user: widget.user,
-              ),
+                car: car, 
+                user: widget.user),
             ),
-          ).then((_) => _loadCars());
+          );
+          if (result == true) {
+            await _loadCars();
+          }
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Car Image
               ClipRRect(
@@ -391,33 +439,40 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '${car.type} • ${car.year}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.airline_seat_recline_normal, 
-                          size: 16, color: Colors.grey[600]),
+                        Icon(
+                          Icons.airline_seat_recline_normal,
+                          size: 16,
+                          color: Colors.grey[600],
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           '${car.seats} Kursi',
-                          style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
                         ),
                         const SizedBox(width: 12),
-                        Icon(Icons.settings, 
-                          size: 16, color: Colors.grey[600]),
+                        Icon(Icons.settings, size: 16, color: Colors.grey[600]),
                         const SizedBox(width: 4),
                         Flexible(
                           child: Text(
                             car.transmission,
-                            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -431,6 +486,7 @@ class _HomePageState extends State<HomePage> {
               // Price & Button
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     'Rp ${NumberFormat('#,###', 'id_ID').format(car.pricePerDay)}',
@@ -444,23 +500,21 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const Text(
                     '/hari',
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.grey,
-                    ),
+                    style: TextStyle(fontSize: 10, color: Colors.grey),
                   ),
                   const SizedBox(height: 8),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
+                    onPressed: ()  async {
+                      final result = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RentFormPage(
-                            car: car,
-                            user: widget.user,
-                          ),
+                          builder: (context) =>
+                              RentFormPage(car: car, user: widget.user),
                         ),
-                      ).then((_) => _loadCars());
+                      );
+                      if (result == true) {
+                        await _loadCars();
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xff605EA1),
@@ -469,14 +523,12 @@ class _HomePageState extends State<HomePage> {
                         horizontal: 12,
                         vertical: 6,
                       ),
+                      minimumSize: const Size(60,32),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text(
-                      'Sewa',
-                      style: TextStyle(fontSize: 12),
-                      ),
+                    child: const Text('Sewa', style: TextStyle(fontSize: 12)),
                   ),
                 ],
               ),

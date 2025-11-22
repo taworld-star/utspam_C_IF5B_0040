@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'screen/login_page.dart';
+import 'screen/onboarding_page.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 
-void main() {
+void main()  async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('id_ID', null);
   runApp(const RentalCar());
 }
 
@@ -16,9 +19,10 @@ class RentalCar extends StatelessWidget {
     return MaterialApp(
       title: 'Car Rental App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color(0xff605EA1)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Color(0xff605EA1)),
       ),
-      home: const LoginPage(),
+      home: const OnboardingPage(),
       debugShowCheckedModeBanner: false,
     );
   }

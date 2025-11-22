@@ -17,19 +17,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
       image: 'assets/images/onboarding1.png',
       title: 'Pilih Mobil Favorit',
       description: 'Berbagai pilihan mobil berkualitas dengan harga terjangkau untuk perjalanan Anda',
-      color: const Color(0xff605EA1),
+      color: const Color(0xff7C3AED),
     ),
     OnboardingItem(
       image: 'assets/images/onboarding2.png',
       title: 'Proses Cepat & Mudah',
       description: 'Booking mobil dalam hitungan menit tanpa ribet dengan aplikasi kami',
-      color: const Color(0xff4CAF50),
+      color: const Color(0xff9333EA),
     ),
     OnboardingItem(
       image: 'assets/images/onboarding3.png',
       title: 'Siap Berkendara!',
       description: 'Nikmati perjalanan Anda dengan mobil pilihan yang nyaman dan aman',
-      color: const Color(0xffFF9800),
+      color: const Color(0xff605EA1),
     ),
   ];
 
@@ -149,32 +149,45 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Widget _buildPage(OnboardingItem item) {
     return Padding(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Image
           Container(
-            height: 300,
+            height: 280,
+            width: double.infinity,
             decoration: BoxDecoration(
-              color: item.color.withOpacity(0.1),
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  item.color.withOpacity(0.1),
+                  item.color.withOpacity(0.05)
+                ],
+              ),
               borderRadius: BorderRadius.circular(20),
             ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
             child: Center(
               child: Image.asset(
                 item.image,
                 height: 250,
-                fit: BoxFit.contain,
+                fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return Icon(
-                    Icons.directions_car,
-                    size: 150,
-                    color: item.color,
+                  return Center(
+                    child: Icon(
+                      Icons.directions_car,
+                      size: 150,
+                      color: item.color,
+                    ),
                   );
                 },
               ),
             ),
           ),
+        ),
           const SizedBox(height: 48),
 
           // Title
