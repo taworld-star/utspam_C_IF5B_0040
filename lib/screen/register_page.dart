@@ -44,7 +44,7 @@ class _RegisterPageState extends State<RegisterPage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Username already exist'),
+              content: Text('Username sudah ada'),
               backgroundColor: Colors.red,
               
             )
@@ -70,7 +70,7 @@ class _RegisterPageState extends State<RegisterPage> {
       if(mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Registration succesfull'),
+            content: Text('Registrasi berhasil'),
             backgroundColor: Colors.green,
           ),
         );
@@ -85,7 +85,7 @@ class _RegisterPageState extends State<RegisterPage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Registration failed: $e'),
+              content: Text('Registrasi gagal: $e'),
               backgroundColor: Colors.red,
             ),
           );
@@ -118,7 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
            icon: const Icon(Icons.arrow_back),
            onPressed: () => Navigator.pop(context),
         ),
-        title: Text('Registration Account'),
+        title: Text('Registrasi Akun'),
         centerTitle: true,
         backgroundColor: const Color(0xff605EA1), // ← TAMBAHKAN COLOR
         foregroundColor: Colors.white,
@@ -131,7 +131,7 @@ class _RegisterPageState extends State<RegisterPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Welcome to Registration Page',
+                'Selamat datang di Halaman Registrasi',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 24,
@@ -141,7 +141,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 20),
               Text(
-                'Please fill the form to continue',
+                'Silakan isi formulir untuk melanjutkan',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
@@ -160,8 +160,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: _nameController,
                       enabled: !_isLoading,
                       decoration: InputDecoration(
-                        labelText: 'Full Name',
-                        hintText: 'Enter your name',
+                        labelText: 'Nama Lengkap',
+                        hintText: 'Masukkan nama lengkap Anda',
                         prefixIcon: Icon(Icons.person_outline),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -178,7 +178,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Name cannot be Empty';
+                          return 'Nama tidak boleh kosong';
                         }
                         return null;
                       },
@@ -192,7 +192,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         labelText: 'NIK',
-                        hintText: 'Example: 1234567890123456',
+                        hintText: 'exp: 1234567890123456',
                         prefixIcon: Icon(Icons.badge_outlined),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -209,10 +209,10 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'NIK cannot be empty';
+                          return 'NIK tidak boleh kosong';
                         }
                         if(value.length != 16){
-                          return 'NIK must be 16 digits';
+                          return 'NIK harus 16 digit';
                         }
                         return null;
                       },
@@ -243,15 +243,15 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Email cannot be empty';
+                          return 'Email tidak boleh kosong';
                         }
                         
                         if (!value.contains('@') || !value.contains('.')) {
-                          return 'Invalid email format';
+                          return 'Format email tidak valid';
                         }
                       
                         if (!_acceptedEmailDomains.any((domain) => value.endsWith(domain))) {
-                          return 'Only domains ${_acceptedEmailDomains.join(', ')} are accepted';
+                          return 'Hanya domain ${_acceptedEmailDomains.join(', ')} yang diterima';
                         }
                         return null;
                       },
@@ -264,8 +264,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       enabled: !_isLoading,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
-                        labelText: 'Phone Number',
-                        hintText: 'Example: 08123456789',
+                        labelText: 'Nomor Telepon',
+                        hintText: 'contoh: 08123456789',
                         prefixIcon: Icon(Icons.phone_android_outlined),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -282,11 +282,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Phone number cannot be empty';
+                          return 'Nomor telepon tidak boleh kosong';
                         }
                         // Example: Check for a minimum length, e.g., 10 digits
-                        if (value.length < 10) {
-                          return 'Invalid phone number';
+                        if (value.length < 10 || value.length > 15) {
+                          return 'Nomor telepon tidak valid';
                         }
                         return null;
                       },
@@ -298,8 +298,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: _addressController,
                       enabled: !_isLoading,
                       decoration: InputDecoration(
-                        labelText: 'Address',
-                        hintText: 'Example: Jakarta, Indonesia',
+                        labelText: 'Alamat',
+                        hintText: 'Contoh: Jakarta, Indonesia',
                         prefixIcon: Icon(Icons.location_city_outlined),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -316,7 +316,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Address cannot be empty';
+                          return 'Alamat tidak boleh kosong';
                         }
                         return null;
                       },
@@ -329,7 +329,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       enabled: !_isLoading,
                       decoration: InputDecoration(
                         labelText: 'Username',
-                        hintText: 'Enter your username',
+                        hintText: 'Masukkan username Anda',
                         prefixIcon: Icon(Icons.account_circle_outlined),
                         border: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -346,10 +346,10 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Username cannot be empty';
+                          return 'Username tidak boleh kosong';
                         }
                         if (value.length < 4) {
-                          return 'Username minimum 3 characters';
+                          return 'Username minimal 3 karakter';
                         }
                         return null;
                       },
@@ -363,7 +363,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
                         labelText: 'Password',
-                        hintText: 'Enter your password',
+                        hintText: 'Masukkan password Anda',
                         prefixIcon: Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -390,10 +390,10 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Password cannot be empty';
+                          return 'Password tidak boleh kosong';
                         }
                         if (value.length < 6) {
-                          return 'Your password must be at least 6 characters long';
+                          return 'Password Anda harus terdiri dari minimal 6 karakter';
                         }
                         return null;
                       },
@@ -424,7 +424,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         )
                       )
                          : const Text(
-                          'Register',
+                          'Daftar',
                           style: TextStyle(fontSize: 18, 
                           fontWeight: FontWeight.bold,
                           // color: Colors.white
@@ -437,7 +437,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text('Have an account? '),
+                        const Text('Sudah punya akun? '),
                         TextButton( 
                           onPressed: _isLoading
                           ? null
@@ -446,7 +446,7 @@ class _RegisterPageState extends State<RegisterPage> {
                              MaterialPageRoute(builder: (context) => const LoginPage()));
                           },
                           child: Text(
-                            'Login Here!',
+                            'Login disini!',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),

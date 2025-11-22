@@ -1,4 +1,4 @@
-# 🚗 Car Rental App
+# Car Rental App : TryCarRent
 
 <div align="center">
 
@@ -6,7 +6,7 @@
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white)
 
-**Aplikasi Penyewaan Mobil Berbasis Flutter dengan Database SQLite**
+**Aplikasi Penyewaan Mobil Berbasis Flutter dengan Database SQFLite**
 
 [Features](#-features) • [Tech Stack](#-tech-stack) • [Installation](#-installation) • [Usage](#-usage) • [Database](#-database-structure) • [Screenshots](#-screenshots)
 
@@ -14,34 +14,35 @@
 
 ---
 
-## 📖 Tentang Aplikasi
+##  Tentang Aplikasi
 
 **Car Rental App** adalah aplikasi mobile untuk manajemen penyewaan mobil yang dibangun menggunakan Flutter dan SQLite. Aplikasi ini memungkinkan pengguna untuk melihat katalog mobil, melakukan penyewaan, melihat riwayat transaksi, dan mengelola profil mereka.
 
-### 🎯 Tujuan Aplikasi
+###  Tujuan Aplikasi
 
 - Mempermudah proses penyewaan mobil secara digital
 - Mengelola data pengguna, mobil, dan transaksi rental
 - Memberikan pengalaman user yang intuitif dan modern
-- Implementasi database lokal dengan SQLite
+- Implementasi database lokal dengan SQfLite
+- Menyelesaikan Project UTS Pemprograman IF 5B dengan kode soal C3
 
 ---
 
-## ✨ Features
+## Features
 
-### 👤 User Management
-- ✅ **Registrasi User** - Daftar akun baru dengan validasi lengkap
-- ✅ **Login/Logout** - Autentikasi pengguna yang aman
-- ✅ **Profile Management** - Edit profil pengguna (nama, email, telepon, alamat)
-- ✅ **Password Change** - Ubah password dengan validasi
+###  User Management
+- 1 **Registrasi User** - Daftar akun baru dengan validasi lengkap
+- 2 **Login/Logout** - Autentikasi pengguna yang aman
+- 3 **Profile Management** - Edit profil pengguna (nama, email, telepon, alamat)
+- 4 **Password Change** - Ubah password dengan validasi
 
-### 🚗 Car Management
-- ✅ **Katalog Mobil** - Lihat daftar mobil dengan detail lengkap
-- ✅ **Filter & Search** - Cari mobil berdasarkan tipe dan ketersediaan
-- ✅ **Car Details** - Informasi lengkap mobil (harga, transmisi, kapasitas)
-- ✅ **Availability Status** - Real-time status ketersediaan mobil
+###  Car Management
+- 1 **Katalog Mobil** - Lihat daftar mobil dengan detail lengkap
+- 2 **Filter & Search** - Cari mobil berdasarkan tipe dan ketersediaan
+- 3 **Car Details** - Informasi lengkap mobil (harga, transmisi, kapasitas)
+- 4 **Availability Status** - Real-time status ketersediaan mobil
 
-### 📝 Rental Management
+###  Rental Management
 - ✅ **Create Rental** - Buat transaksi penyewaan baru
 - ✅ **Rental History** - Lihat riwayat penyewaan (Active & Completed)
 - ✅ **Rental Details** - Detail transaksi lengkap
@@ -69,9 +70,9 @@
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **Flutter 3.x** - UI Framework
-- **Dart 3.x** - Programming Language
-- **Material Design 3** - Design System
+- **Flutter** - UI Framework
+- **Dart** - Programming Language
+- **Material Design** - Design System
 
 ### Backend/Database
 - **SQLite** - Local Database
@@ -87,7 +88,7 @@
 
 ---
 
-## 📂 Struktur Folder
+##  Struktur Folder
 
 ```
 car_rental_app/
@@ -130,7 +131,7 @@ car_rental_app/
 │       ├── history_page.dart             # Riwayat transaksi
 │       ├── detail_rental_page.dart       # Detail transaksi
 │       ├── profile_page.dart             # Profile user
-│       └── debug_page.dart               # Debug tools
+│       
 │
 ├── pubspec.yaml                           # Dependencies
 └── README.md                              # Dokumentasi
@@ -138,9 +139,9 @@ car_rental_app/
 
 ---
 
-## 💾 Database Structure
+##  Database Structure
 
-### 📊 Database Schema
+### Database Schema
 
 #### **Table: users**
 ```sql
@@ -242,7 +243,7 @@ CREATE TABLE rentals (
 
 ---
 
-### 🔄 Database Relationships
+### Database Relationships
 
 ```
 users (1) ──────< (N) rentals
@@ -255,7 +256,7 @@ One car can have many rentals
 
 ---
 
-### 📈 Database Migration
+###  Database Migration
 
 **Version 1 → Version 2:**
 ```dart
@@ -271,7 +272,7 @@ Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
 
 ---
 
-## 🎨 UI Flow Diagram
+##  UI Flow Diagram
 
 ```
 ┌─────────────────┐
@@ -341,9 +342,9 @@ Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
 
 ---
 
-## 🔐 User Journey
+##  User Journey
 
-### 🆕 New User Flow
+###  New User Flow
 ```
 1. Open App
    ↓
@@ -366,7 +367,7 @@ Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
 8. Home Page
 ```
 
-### 🔄 Existing User Flow
+### Existing User Flow
 ```
 1. Open App
    ↓
@@ -379,7 +380,7 @@ Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
 5. Browse Cars atau Check History
 ```
 
-### 🚗 Rental Flow
+###  Rental Flow
 ```
 1. Home Page → "Tambah Sewa"
    ↓
@@ -417,9 +418,9 @@ Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
 
 ---
 
-## 🎯 Key Features Detail
+##  Key Features Detail
 
-### 🔍 Search & Filter
+###  Search & Filter
 ```dart
 // Filter by car type
 List<String> types = ['All', 'MPV', 'Sedan', 'SUV'];
@@ -428,7 +429,7 @@ List<String> types = ['All', 'MPV', 'Sedan', 'SUV'];
 final availableCars = cars.where((car) => car.isAvailable).toList();
 ```
 
-### 💰 Auto Price Calculation
+###  Auto Price Calculation
 ```dart
 // Hitung otomatis saat pilih tanggal
 int rentalDays = _endDate!.difference(_startDate!).inDays + 1;
@@ -438,7 +439,7 @@ int totalPrice = widget.car.pricePerDay * rentalDays;
 NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0)
 ```
 
-### 📅 Date Validation
+###  Date Validation
 ```dart
 // Start date harus hari ini atau lebih
 minimumDate: DateTime.now()
@@ -449,7 +450,7 @@ if (_endDate != null && _endDate!.isBefore(_startDate!)) {
 }
 ```
 
-### 🔄 Real-time Availability
+###  Real-time Availability
 ```dart
 // Saat create rental
 await CarDao().updateAvailability(carId, false); // Set unavailable
@@ -526,9 +527,9 @@ flutter build apk --release
 
 ---
 
-## 📱 Usage
+##  Usage
 
-### 🆕 First Time Setup
+###  First Time Setup
 
 **1. Launch App**
 ```
@@ -552,7 +553,7 @@ Swipe atau klik "Skip" untuk lewati
 • Redirect ke Home Page
 ```
 
-### 🚗 Sewa Mobil
+###  Sewa Mobil
 
 **1. Browse Cars**
 ```
@@ -595,7 +596,7 @@ Home Page → Klik "Riwayat Sewa"
 • Mobil kembali available
 ```
 
-### 👤 Manage Profile
+###  Manage Profile
 
 **1. Edit Profile**
 ```
@@ -613,7 +614,7 @@ Profile Page → Klik "Ubah Password"
 • Klik "Ubah Password"
 ```
 
-### 🛠️ Debug Tools
+###  Debug Tools
 
 **1. Access Debug Page**
 ```
@@ -630,7 +631,7 @@ Home Page → Klik "Debug DB"
 
 ---
 
-## 🎨 Screenshots
+## Screenshots
 
 ### Onboarding & Auth
 ```
@@ -658,24 +659,24 @@ Home Page → Klik "Debug DB"
 
 ---
 
-## 🧪 Testing
+##  Testing
 
 ### Manual Testing Checklist
 
-**✅ Authentication**
+**Authentication**
 - [ ] Register dengan data lengkap
 - [ ] Register dengan username yang sudah ada (should error)
 - [ ] Login dengan credentials benar
 - [ ] Login dengan credentials salah (should error)
 - [ ] Logout dari app
 
-**✅ Car Management**
+**Car Management**
 - [ ] Lihat semua mobil di Car List
 - [ ] Filter mobil by type (MPV/Sedan/SUV)
 - [ ] Available cars only muncul
 - [ ] Unavailable cars tidak muncul di list
 
-**✅ Rental Management**
+**Rental Management**
 - [ ] Create rental baru
 - [ ] Auto calculation total price
 - [ ] Date validation (end > start)
@@ -685,73 +686,18 @@ Home Page → Klik "Debug DB"
 - [ ] Car availability berubah jadi available setelah complete
 - [ ] Rental muncul di tab "Selesai"
 
-**✅ Profile Management**
+**Profile Management**
 - [ ] Edit profile
 - [ ] Change password
 - [ ] Validation password (min 6 chars)
 
-**✅ UI/UX**
+**UI/UX**
 - [ ] Pull to refresh works
 - [ ] Loading states muncul
 - [ ] Empty states muncul saat data kosong
 - [ ] Confirmation dialogs muncul
 - [ ] Error messages jelas
 
----
-
-## 🐛 Troubleshooting
-
-### Database Issues
-
-**Problem:** Error "no such table: rentals"
-```bash
-Solution:
-1. Uninstall app dari device
-2. Run: flutter clean
-3. Run: flutter pub get
-4. Run: flutter run
-```
-
-**Problem:** Data tidak muncul
-```bash
-Solution:
-1. Check console logs
-2. Buka Debug Page
-3. Klik "Print All Data to Console"
-4. Verify data di console
-```
-
-**Problem:** Car masih unavailable setelah complete rental
-```bash
-Solution:
-1. Buka Debug Page
-2. Klik "Set All Cars AVAILABLE"
-3. Refresh Car List Page
-```
-
-### Common Errors
-
-**Error:** LateInitializationError
-```dart
-// Make sure to initialize in initState
-@override
-void initState() {
-  super.initState();
-  _loadData(); // Load data here
-}
-```
-
-**Error:** setState called after dispose
-```dart
-// Always check mounted
-if (mounted) {
-  setState(() {
-    // Update state
-  });
-}
-```
-
----
 
 ## 📚 Code Examples
 
@@ -808,72 +754,13 @@ final activeRentals = await RentalDao().findActiveByUserId(userId);
 final completedRentals = await RentalDao().findCompletedByUserId(userId);
 ```
 
----
+**UI Referensi & ImageCar**
+- https://www.sketchflow.ai/designPage/editor?project_id=43372&design_id=44020&pageId=778660
 
-## 🔮 Future Enhancements
+**Video Recording TryCarRent**
 
-### Planned Features
-- [ ] **Payment Integration** - Integrasi payment gateway
-- [ ] **Push Notifications** - Reminder untuk return mobil
-- [ ] **GPS Tracking** - Track lokasi mobil
-- [ ] **Reviews & Ratings** - User bisa kasih review
-- [ ] **Admin Panel** - Web dashboard untuk admin
-- [ ] **Image Upload** - User bisa upload foto KTP
-- [ ] **Export PDF** - Export invoice rental
-- [ ] **Dark Mode** - Support dark theme
-- [ ] **Multi-language** - Support bahasa Inggris
-- [ ] **Cloud Sync** - Sync data ke cloud (Firebase)
 
-### Technical Improvements
-- [ ] Implement **Bloc** state management
-- [ ] Add **unit tests** & **widget tests**
-- [ ] Implement **CI/CD** pipeline
-- [ ] Add **API integration** (REST API)
-- [ ] Encrypt password dengan **bcrypt**
-- [ ] Add **biometric authentication**
-- [ ] Optimize database queries dengan **indexes**
-- [ ] Add **offline mode** support
-
----
-
-## 👨‍💻 Developer
-
-**Your Name**
-- 📧 Email: your.email@example.com
-- 🌐 GitHub: [@yourusername](https://github.com/yourusername)
-- 💼 LinkedIn: [Your Name](https://linkedin.com/in/yourprofile)
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- **Flutter Team** - Amazing framework
-- **SQLite** - Reliable local database
-- **Material Design** - Beautiful design system
-- **Intl Package** - Date & number formatting
-- **Community** - Stack Overflow, Flutter.dev
-
----
-
-## 📞 Support
-
-Jika ada pertanyaan atau issue:
-1. Check [Troubleshooting](#-troubleshooting) section
-2. Open issue di GitHub
-3. Email developer
-
----
-
-<div align="center">
-
-**⭐ Star this repo if you find it helpful!**
-
-Made with ❤️ using Flutter
-
-</div>
+**Dibuat**
+- Nama: Sustri Elina Simamora
+- Kelas: IF 5B
+- NIM : 3012310040

@@ -182,6 +182,7 @@ class _RentFormPageState extends State<RentFormPage> {
         );
 
         await _rentalDao.insert(rental);
+        
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

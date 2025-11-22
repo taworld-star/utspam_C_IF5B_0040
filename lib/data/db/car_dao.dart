@@ -17,8 +17,7 @@ class CarDao {
     final db = await _dbHelper.database;
     final result = await db.query(
       'cars',
-      where: 'is_available = ?',
-      whereArgs: [1],
+      where: 'is_available = 1',
       orderBy: 'name ASC',
     );
     return result.map((json) => CarModel.fromMap(json)).toList();

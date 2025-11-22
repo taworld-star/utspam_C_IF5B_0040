@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Username not found'),
+                content: Text('Username tidak ditemukan'),
                 backgroundColor: Colors.red,
               ),
             );
@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Wrong Password'),
+                content: Text('Password salah'),
                 backgroundColor: Colors.red,
               ),
             );
@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Login successful'),
+              content: Text('Login berhasil'),
               backgroundColor: Colors.green,
             ),
           );
@@ -75,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Login failed: $e'),
+              content: Text('Login gagal: $e'),
               backgroundColor: Colors.red,
             ),
           );
@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                 Image.asset('assets/images/logo1.png', height: 200),
 
                 const Text(
-                  'Rental Car Application',
+                  'Aplikasi Rental Mobil',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 28,
@@ -113,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const Text(
-                  'Welcome to Rental Car Application\n Please login to continue!',
+                  'Selamat datang di aplikasi trycarrent \n Silakan masuk untuk melanjutkan!',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, fontFamily: 'poppins'),
                 ),
@@ -126,16 +126,16 @@ class _LoginPageState extends State<LoginPage> {
                   keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     labelText: 'Username',
-                    hintText: 'Enter your username',
+                    hintText: 'Masukkan username anda',
                     prefixIcon: Icon(Icons.account_circle),
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Username cannot be empty';
+                      return 'Username tidak boleh kosong';
                     }
                     if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value)) {
-                      return 'Username only allows letters, numbers, and underscore';
+                      return 'Username hanya boleh berisi huruf, angka, dan underscore';
                     }
                     return null;
                   },
@@ -149,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    hintText: 'Enter your password',
+                    hintText: 'Masukkan password anda',
                     prefixIcon: const Icon(Icons.lock),
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -169,10 +169,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Password cannot be empty';
+                      return 'Password tidak boleh kosong';
                     }
                     if (value.length < 6) {
-                      return 'Password minimum 6 digits';
+                      return 'Password minimal 6 karakter';
                     }
                     return null;
                   },
@@ -207,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Don't have an account?"),
+                    const Text("Belum punya akun?"),
                     TextButton(
                       onPressed: _isLoading
                           ? null
@@ -219,7 +219,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         );
                       },
-                      child: const Text('Register'),
+                      child: const Text('Daftar'),
                     ),
                   ],
                 ),
