@@ -13,8 +13,7 @@
 ---
 
 ##  Tentang Aplikasi
-
-**Car Rental App** adalah aplikasi mobile untuk manajemen penyewaan mobil yang dibangun menggunakan Flutter dan SQLite. Aplikasi ini memungkinkan pengguna untuk melihat katalog mobil, melakukan penyewaan, melihat riwayat transaksi, dan mengelola profil mereka.
+**TryCarRent** adalah aplikasi mobile untuk manajemen penyewaan mobil yang dibangun menggunakan Flutter dan SQLite. Aplikasi ini memungkinkan pengguna untuk melihat katalog mobil, melakukan penyewaan, melihat riwayat transaksi, dan mengelola profil user. Aplikasi ini dibuat untuk memenuhi tugas UTS Pemprograman Mobile Informatika 5B.
 
 ###  Tujuan Aplikasi
 
@@ -25,6 +24,11 @@
 - Menyelesaikan Project UTS Pemprograman IF 5B dengan kode soal C3
 
 ---
+
+### Video Recording Running App
+https://drive.google.com/file/d/1y9VZPBwdr7I5UcX6fJbrqIIkiDpZKbdo/view?usp=sharing
+
+[![Watch the video](https://img.youtube.com/vi/LOOWO1tXHUg/maxresdefault.jpg)](https://www.youtube.com/watch?v=LOOWO1tXHUg)
 
 ## Features
 
