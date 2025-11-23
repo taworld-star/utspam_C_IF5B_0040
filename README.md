@@ -28,7 +28,18 @@
 ### Video Recording Running App
 https://drive.google.com/file/d/1y9VZPBwdr7I5UcX6fJbrqIIkiDpZKbdo/view?usp=sharing
 
-[![Watch the video](https://img.youtube.com/vi/LOOWO1tXHUg/maxresdefault.jpg)](https://www.youtube.com/watch?v=LOOWO1tXHUg)
+[![Watch the video]((https://youtu.be/czoZYISpKlk?si=MPp4rOva3cXdzjm3))]((https://youtu.be/czoZYISpKlk?si=MPp4rOva3cXdzjm3))
+
+
+### Mockup Screenshoot
+
+![Onboarding](https://github.com/user-attachments/assets/c7e8da14-97c1-4126-ba6b-6e8104a4bc30)
+
+![auth   homepage](https://github.com/user-attachments/assets/44c5366b-3945-4acb-b76e-1b4662a65ab8)
+
+![sewa page](https://github.com/user-attachments/assets/f8197a01-1c36-4390-8105-58d3f3c1dc6d)
+
+![profile   logout](https://github.com/user-attachments/assets/5724b61f-5c02-4267-b360-45df4b8d1017)
 
 ## Features
 
@@ -36,7 +47,6 @@ https://drive.google.com/file/d/1y9VZPBwdr7I5UcX6fJbrqIIkiDpZKbdo/view?usp=shari
 - 1 **Registrasi User** - Daftar akun baru dengan validasi lengkap
 - 2 **Login/Logout** - Autentikasi pengguna yang aman
 - 3 **Profile Management** - Edit profil pengguna (nama, email, telepon, alamat)
-- 4 **Password Change** - Ubah password dengan validasi
 
 ###  Car Management
 - 1 **Katalog Mobil** - Lihat daftar mobil dengan detail lengkap
@@ -51,7 +61,7 @@ https://drive.google.com/file/d/1y9VZPBwdr7I5UcX6fJbrqIIkiDpZKbdo/view?usp=shari
 - ✅ **Complete Rental** - Selesaikan penyewaan dan kembalikan mobil
 - ✅ **Auto Price Calculation** - Hitung otomatis total harga berdasarkan durasi
 
-### 🎨 UI/UX Features
+###  UI/UX Features
 - ✅ **Onboarding Screens** - Welcome screens dengan animasi smooth
 - ✅ **Purple Theme** - Tema konsisten dengan purple family colors
 - ✅ **Responsive Design** - Tampilan optimal di berbagai ukuran layar
@@ -61,7 +71,7 @@ https://drive.google.com/file/d/1y9VZPBwdr7I5UcX6fJbrqIIkiDpZKbdo/view?usp=shari
 - ✅ **Empty States** - Tampilan menarik saat data kosong
 - ✅ **Confirmation Dialogs** - Konfirmasi untuk aksi penting
 
-### 🛠️ Developer Tools
+###  Developer Tools
 - ✅ **Debug Page** - Monitor database (jumlah users, cars, rentals)
 - ✅ **Reset Car Availability** - Set semua mobil jadi available
 - ✅ **Console Logging** - Debug logs untuk tracking data flow
@@ -69,7 +79,7 @@ https://drive.google.com/file/d/1y9VZPBwdr7I5UcX6fJbrqIIkiDpZKbdo/view?usp=shari
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Frontend
 - **Flutter** - UI Framework
