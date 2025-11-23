@@ -27,8 +27,7 @@
 
 ### Video Recording Running App
 https://drive.google.com/file/d/1y9VZPBwdr7I5UcX6fJbrqIIkiDpZKbdo/view?usp=sharing
-
-[![Watch the video]((https://youtu.be/czoZYISpKlk?si=MPp4rOva3cXdzjm3))]((https://youtu.be/czoZYISpKlk?si=MPp4rOva3cXdzjm3))
+[![Watch the video](https://img.youtube.com/vi/czoZYISpKlk/maxresdefault.jpg)](https://www.youtube.com/watch?v=czoZYISpKlk)
 
 
 ### Mockup Screenshoot
