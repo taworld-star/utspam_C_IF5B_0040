@@ -89,7 +89,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: const Text('Profil Saya'),
         backgroundColor: const Color(0xff605EA1),
         foregroundColor: Colors.white,
         elevation: 0,
@@ -201,34 +201,34 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Column(
                         children: [
                           _buildInfoCard(
-                            title: 'Personal Information',
+                            title: 'Informasi Pribadi',
                             icon: Icons.person_outline,
                             children: [
                               _buildInfoRow(Icons.badge, 'NIK', _user.nik),
                               const Divider(),
                               _buildInfoRow(
-                                  Icons.person_2_outlined, 'Full Name', _user.name),
+                                  Icons.person_2_outlined, 'Nama Lengkap', _user.name),
                             ],
                           ),
                           const SizedBox(height: 16),
 
                           _buildInfoCard(
-                            title: 'Contact Information',
+                            title: 'Informasi Kontak',
                             icon: Icons.contact_mail_outlined,
                             children: [
                               _buildInfoRow(Icons.email, 'Email', _user.email),
                               const Divider(),
-                              _buildInfoRow(Icons.phone, 'Phone', _user.phone),
+                              _buildInfoRow(Icons.phone, 'Telepon', _user.phone),
                             ],
                           ),
                           const SizedBox(height: 16),
 
                           _buildInfoCard(
-                            title: 'Address',
+                            title: 'Alamat',
                             icon: Icons.location_on_outlined,
                             children: [
                               _buildInfoRow(
-                                  Icons.home, 'Address', _user.address),
+                                  Icons.home, 'Alamat', _user.address),
                             ],
                           ),
                           const SizedBox(height: 24),
@@ -241,7 +241,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               onPressed: _logout,
                               icon: const Icon(Icons.logout),
                               label: const Text(
-                                'Logout',
+                                'Keluar',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,

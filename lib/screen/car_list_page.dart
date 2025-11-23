@@ -19,10 +19,10 @@ class _CarListPageState extends State<CarListPage> {
   List<CarModel> _allCars = [];
   List<CarModel> _filteredCars = [];
   bool _isLoading = true;
-  String _selectedType = 'All';
+  String _selectedType = 'Semua';
   String _searchQuery = '';
 
-  final List<String> _carTypes = ['All', 'Sedan', 'SUV', 'MPV'];
+  final List<String> _carTypes = ['Semua', 'Sedan', 'SUV', 'MPV'];
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class _CarListPageState extends State<CarListPage> {
     setState(() {
       _filteredCars = _allCars.where((car) {
         final matchesType =
-            _selectedType == 'All' || car.type == _selectedType;
+            _selectedType == 'Semua' || car.type == _selectedType;
         final matchesSearch = car.name
             .toLowerCase()
             .contains(_searchQuery.toLowerCase());
@@ -73,7 +73,7 @@ class _CarListPageState extends State<CarListPage> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('All Cars'),
+        title: const Text('Semua Mobil'),
         backgroundColor: const Color(0xff605EA1),
         foregroundColor: Colors.white,
         elevation: 0,
@@ -102,7 +102,7 @@ class _CarListPageState extends State<CarListPage> {
                   },
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    hintText: 'Search car name...',
+                    hintText: 'Cari nama mobil...',
                     hintStyle: TextStyle(color: Colors.white.withOpacity(0.6)),
                     prefixIcon: const Icon(Icons.search, color: Colors.white),
                     filled: true,
@@ -166,7 +166,7 @@ class _CarListPageState extends State<CarListPage> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'No cars found',
+                              'Tidak ada mobil ditemukan',
                               style: TextStyle(
                                 fontSize: 18,
                                 color: Colors.grey[600],
@@ -317,7 +317,7 @@ class _CarListPageState extends State<CarListPage> {
                       children: [
                         Flexible(
                           child: Text(
-                            'Rp ${NumberFormat('#,###', 'id_ID').format(car.pricePerDay)}/day',
+                            'Rp ${NumberFormat('#,###', 'id_ID').format(car.pricePerDay)}/hari',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -340,7 +340,7 @@ class _CarListPageState extends State<CarListPage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            car.isAvailable ? 'Available' : 'Rented',
+                            car.isAvailable ? 'Tersedia' : 'Disewa',
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.white,

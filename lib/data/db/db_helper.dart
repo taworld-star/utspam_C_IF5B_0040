@@ -17,6 +17,8 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
+    //await deleteDatabase(path); 
+
     return await openDatabase(
       path,
       version: 2, 
@@ -89,7 +91,7 @@ class DatabaseHelper {
       );
       
       if (result.isEmpty) {
-        print('➕ Creating rentals table...');
+        print('Creating rentals table...');
         await db.execute('''
           CREATE TABLE rentals (
             id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -322,7 +322,7 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
                           // Action Buttons
                           Column(
                             children: [
-                              // Tombol Edit (hanya untuk status aktif)
+                              // Button Edit (only for active status)
                               if (_rental.status == 'active')
                                 SizedBox(
                                   width: double.infinity,
@@ -342,13 +342,13 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
                                               ),
                                             );
 
-                                            // Refresh data jika ada perubahan
+                                            // Refresh data if there are changes
                                             if (result == true) {
                                               await _refreshRental();
                                             }
                                           },
                                     icon: const Icon(Icons.edit),
-                                    label: const Text('Edit Sewa'),
+                                    label: const Text('Edit Rental'),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: const Color(0xff605EA1),
                                       foregroundColor: Colors.white,
@@ -363,7 +363,7 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
                               if (_rental.status == 'active')
                                 const SizedBox(height: 12),
 
-                              // Tombol Batalkan (hanya untuk status aktif)
+                              // Button Cancel Rental
                               if (_rental.status == 'active')
                                 SizedBox(
                                   width: double.infinity,
@@ -388,7 +388,7 @@ class _RentalDetailPageState extends State<DetailRentalPage> {
                               if (_rental.status == 'active')
                                 const SizedBox(height: 12),
 
-                              // Tombol Kembali ke Riwayat
+                              // Button back to History
                               SizedBox(
                                 width: double.infinity,
                                 height: 50,

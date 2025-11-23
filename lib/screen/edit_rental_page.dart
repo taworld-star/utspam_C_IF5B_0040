@@ -35,16 +35,16 @@ class _EditRentalPageState extends State<EditRentalPage> {
   void initState() {
     super.initState();
     
-    // Initialize controllers dengan data dari rental
+    // Initialize controllers with data from rental
     _carNameController = TextEditingController(text: widget.rental.carName);
     _renterNameController = TextEditingController(text: widget.rental.renterName);
     _rentalDaysController = TextEditingController(text: widget.rental.rentalDays.toString());
     
-    // Set tanggal
+    // Set dates
     _startDate = widget.rental.startDate;
     _endDate = widget.rental.endDate;
     
-    // Hitung harga
+    // Cost calculation
     _totalPrice = widget.rental.totalPrice;
     _pricePerDay = widget.rental.totalPrice ~/ widget.rental.rentalDays;
   }
